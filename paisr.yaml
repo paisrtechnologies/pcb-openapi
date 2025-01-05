@@ -4109,7 +4109,7 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: "#/components/schemas/PostInitiatePcbPaymentRequest"
+                - $ref: "#/components/schemas/PostInitiateInstantPaymentRequest"
                 - $ref: "#/components/schemas/PostInitiateQrPaymentRequest"
                 - $ref: "#/components/schemas/PostInitiateCardPaymentRequest"
                 - $ref: "#/components/schemas/PostInitiateBankPaymentRequest"
@@ -7304,7 +7304,7 @@ components:
           description: Price per unit.
 
     # Payments
-    PostInitiatePcbPaymentRequest:
+    PostInitiateInstantPaymentRequest:
       title: Instant
       type: object
       required:
@@ -7405,14 +7405,6 @@ components:
           type: string
           format: url
           description: The url to redirect the customer to after completing the payment.
-    PostCancelPaymentRequest:
-      type: object
-      required:
-        - note
-      properties:
-        note:
-          type: string
-          description: Reason for cancellation.
     PostRefundPaymentRequest:
       type: object
       required:
