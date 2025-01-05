@@ -4216,46 +4216,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /payments/{payment_id}/cancel:
-    post:
-      tags:
-        - Payments
-      summary: Cancel Payment
-      description: Cancel a pending payment.
-      parameters:
-        - name: payment_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Payment ID.
-            pattern: "^pmt_.*$"
-      requestBody:
-        description: The details required to cancel a pending payment.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostCancelPaymentRequest"
-      responses:
-        "200":
-          description: Successfully cancelled payment.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 
   /metrics/billing:
     get:
@@ -4763,21 +4723,14 @@ components:
         data:
           type: object
           properties:
-            id:
+            session:
               type: string
-              description: The unique identifier of the payment.
-              example: pmt_123456
-            status:
+              example: https://app.paisr.tech/pay/ey7bTCm6tur63CR6mzbuq23r
+              description: The url to redirect the customer to collect payment.
+            expires_in:
               type: string
-              description: The current state of the payment.
-              example: pending
-            metadata:
-              type: object
-              properties:
-                redirect_url:
-                  type: string
-                  description: The url to redirect the customer to collect payment.
-                  example: https://app.paisr.tech/pay/eyNl87il2x4rqkui2b4t6r
+              example: 10 Minutes
+              description: The session expiration time.
     QrPaymentResponse:
       title: QR
       type: object
@@ -4825,6 +4778,9 @@ components:
               example: pmt_123456
             status:
               type: string
+              enum:
+                - failed
+                - approved
               description: The current state of the payment.
               example: approved
     BankPaymentResponse:
@@ -4837,21 +4793,14 @@ components:
         data:
           type: object
           properties:
-            id:
+            session:
               type: string
-              description: The unique identifier of the payment.
-              example: pmt_123456
-            status:
+              example: https://example.bank.com/pay/ey7bTCm6tur63CR6mzbuq23r
+              description: The url to redirect the customer to collect payment.
+            expires_in:
               type: string
-              description: The current state of the payment.
-              example: pending
-            metadata:
-              type: object
-              properties:
-                redirect_url:
-                  type: string
-                  description: The bank url to redirect the customer to collect payment.
-                  example: https://example-bank.com/pay/eyNo3ny1x7y
+              example: 10 Minutes
+              description: The session expiration time.
 
     # Enums
     ProfileStatus:
@@ -6408,7 +6357,16 @@ components:
       properties:
         session:
           type: string
-          example: ey7bTCm6tur63CR6mzbuq23r
+          example: https://checkout.paisr.tech/ey7bTCm6tur63CR6mzbuq23r
+        expires_in:
+          type: string
+          example: 30 Minutes
+    CustomerSession:
+      type: object
+      properties:
+        session:
+          type: string
+          example: https://portal.paisr.tech/ey7bTCm6tur63CR6mzbuq23r
         expires_in:
           type: string
           example: 30 Minutes
@@ -7352,36 +7310,32 @@ components:
       required:
         - invoice_id
         - redirect_url
-        - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
+          pattern: "^inv_.*$"
         redirect_url:
           type: string
+          format: url
           description: The url to redirect the customer to after completing the payment.
-        billing_details:
-          $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateQrPaymentRequest:
       title: QR
       type: object
       required:
         - invoice_id
         - provider
-        - redirect_url
         - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
+          pattern: "^inv_.*$"
         provider:
           type: string
           enum:
             - uni5pay
           description: The name of the QR provider.
-        redirect_url:
-          type: string
-          description: The url to redirect the customer to after completing the payment.
         billing_details:
           $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateCardPaymentRequest:
@@ -7389,44 +7343,47 @@ components:
       type: object
       required:
         - invoice_id
-        - redirect_url
         - card_details
         - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
-        redirect_url:
-          type: string
-          description: The url to redirect the customer to after completing the payment.
+          pattern: "^inv_.*$"
         card_details:
           type: object
           required:
-            - beneficiary
-            - pan
+            - card_holder
+            - card_number
             - exp_month
             - exp_year
             - brand
             - security
           properties:
-            beneficiary:
+            card_holder:
               type: string
-              description: Encoded cardholder name.
-            pan:
+              description: Full card holder name.
+              pattern: ^[a-zA-Z0-9 ]{2,72}$
+            card_number:
               type: string
-              description: Encoded 16-digit card number.
+              description: Full 16-digit card number.
+              pattern: ^[a-zA-Z0-9 ]{2,72}$
             exp_month:
-              type: number
+              type: string
               description: Card expiration month.
+              pattern: ^[0-9]{2}$
             exp_year:
-              type: number
+              type: string
               description: Card expiration year.
+              pattern: ^[0-9]{4}$
             brand:
               type: string
               description: Card brand.
+              pattern: ^[a-z]{2,48}$
             security:
               type: string
-              description: Encoded card security / CVC / CVV code.
+              description: Card CVC, CVV or PIN code.
+              pattern: ^[0-9]{3,4}$
         billing_details:
           $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateBankPaymentRequest:
@@ -7436,19 +7393,18 @@ components:
         - invoice_id
         - swift_code
         - redirect_url
-        - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
+          pattern: "^inv_.*$"
         swift_code:
           type: string
           description: Swift Code / BIC of the bank.
         redirect_url:
           type: string
+          format: url
           description: The url to redirect the customer to after completing the payment.
-        billing_details:
-          $ref: "#/components/schemas/PaymentBillingDetails"
     PostCancelPaymentRequest:
       type: object
       required:
