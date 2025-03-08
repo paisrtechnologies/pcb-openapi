@@ -4648,7 +4648,7 @@ paths:
       summary: Remove Provider Connection
       description: Permanently disconnect a provider. (Business Only)
       parameters:
-        - name: connnection_id
+        - name: connection_id
           in: path
           required: true
           schema:
