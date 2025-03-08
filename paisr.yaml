@@ -4577,7 +4577,7 @@ paths:
       summary: Update Provider Connection
       description: Update connection API credentials. (Business Only)
       parameters:
-        - name: provider_id
+        - name: connection_id
           in: path
           required: true
           schema:
@@ -4616,7 +4616,7 @@ paths:
       summary: Modify Provider Connection
       description: Enable or disable a provider connection. (Business Only)
       parameters:
-        - name: provider_id
+        - name: connection_id
           in: path
           required: true
           schema:
@@ -4648,7 +4648,7 @@ paths:
       summary: Remove Provider Connection
       description: Permanently disconnect a provider. (Business Only)
       parameters:
-        - name: provider_id
+        - name: connnection_id
           in: path
           required: true
           schema:
