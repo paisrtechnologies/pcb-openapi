@@ -3772,7 +3772,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataResponse"
+                $ref: "#/components/schemas/SessionDataResponse"
         "4XX":
           description: Client error.
           content:
@@ -4130,7 +4130,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataResponse"
+                $ref: "#/components/schemas/SessionDataResponse"
         "4XX":
           description: Client error.
           content:
@@ -5190,6 +5190,33 @@ components:
             id:
               type: string
               description: The unique identifier of the newly created resource.
+    SessionDataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indicates if the request was successful.
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the newly created resource.
+            status:
+              type: string
+              description: The status of the newly created resource.
+            session:
+              type: object
+              default: null
+              description: The session details for collecting payment
+              properties:
+                url:
+                  type: string
+                  description: The checkout url
+                expires_in:
+                  type: string
+                  description: Session experation time.
     TokenResponse:
       type: object
       properties:
