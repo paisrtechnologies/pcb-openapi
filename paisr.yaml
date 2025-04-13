@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Paisr
-  version: 2.0.1
+  version: 2.1.1
   description: Paisr is the payment infrastructure for the Caribbean.
 servers:
   - url: https://api.live.paisr.tech/{version}
@@ -41,12 +41,18 @@ tags:
     description: Initiate and manage peer-to-peer, bank, or batch transfers.
   - name: Invoices
     description: Generate, send, and manage invoices.
+  - name: Subscriptions
+    description: Create and manage subscriptions.
   - name: Customers
     description: Manage customer profiles, addresses, and other resources.
   - name: Vouchers
-    description: Create, manage, and track usage of vouchers and discounts.
+    description: Create, manage, and track usage of discounts.
+  - name: Plans
+    description: Create and manage billing plans.
   - name: Payments
-    description: Manage, collect and process third-party payments seamlessly.
+    description: Manage, collect and process payments.
+  - name: Provider Connections
+    description: Manage built-in and external payment provider connections.
   - name: Analytics
     description: Access analytic metrics on resources.
   - name: Logs
@@ -105,6 +111,30 @@ paths:
       responses:
         "200":
           description: Successfully updated profile details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+        - Profiles
+      summary: Submit Application
+      description: Submit your profile for approval.
+      responses:
+        "200":
+          description: Application submitted successfully.
           content:
             application/json:
               schema:
@@ -1599,6 +1629,45 @@ paths:
     put:
       tags:
         - Wallets
+      summary: Update Profile
+      description: Modify wallet profile information.
+      parameters:
+        - name: wallet_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Wallet ID.
+            pattern: "^(buw_|inw_).*"
+      requestBody:
+        description: The details required to update the wallet profile.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutWalletRequest"
+      responses:
+        "200":
+          description: Successfully updated wallet profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+        - Wallets
       summary: Update Wallet
       description: Modify wallet information.
       parameters:
@@ -1615,10 +1684,42 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PutWalletRequest"
+              $ref: "#/components/schemas/PatchWalletRequest"
       responses:
         "200":
           description: Successfully updated wallet.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Wallets
+      summary: Delete Wallet
+      description: Remove a wallet from your profile.
+      parameters:
+        - name: wallet_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Wallet ID.
+            pattern: "^(buw_|inw_).*"
+      responses:
+        "200":
+          description: Successfully removed wallet.
           content:
             application/json:
               schema:
@@ -1690,123 +1791,6 @@ paths:
       responses:
         "200":
           description: Successfully rotated wallet PIN.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /wallets/{wallet_id}/usage:
-    get:
-      tags:
-        - Wallets
-      summary: Get Usage
-      description: Fetch wallet usage.
-      parameters:
-        - name: wallet_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Wallet ID.
-            pattern: "^(buw_|inw_).*"
-      responses:
-        "200":
-          description: Successfully retrieved wallet usage.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    $ref: "#/components/schemas/WalletUsage"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /wallets/{wallet_id}/profile:
-    get:
-      tags:
-        - Wallets
-      summary: Get Profile
-      description: Fetch wallet profile.
-      parameters:
-        - name: wallet_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Wallet ID.
-            pattern: "^(buw_|inw_).*"
-      responses:
-        "200":
-          description: Successfully retrieved wallet profile.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    $ref: "#/components/schemas/WalletProfile"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    put:
-      tags:
-        - Wallets
-      summary: Update Profile
-      description: Modify wallet profile information.
-      parameters:
-        - name: wallet_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Wallet ID.
-            pattern: "^(buw_|inw_).*"
-      requestBody:
-        description: The details required to update the wallet profile.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PutWalletProfileRequest"
-      responses:
-        "200":
-          description: Successfully updated wallet profile.
           content:
             application/json:
               schema:
@@ -2832,8 +2816,8 @@ paths:
             type: string
             enum:
               - peer
-              - bank
               - move
+              - bank
               - batch
             description: The Transfer Method.
       requestBody:
@@ -3159,215 +3143,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /customers/{customer_id}/session:
-    get:
-      tags:
-        - Customers
-      summary: Generate Session
-      description: Generate a public customer session. (Business Only)
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Customer ID.
-            pattern: "^cus_.*$"
-      responses:
-        "200":
-          description: Successfully retrieved customer session.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    $ref: "#/components/schemas/CheckoutSession"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
-  /customers/{customer_id}/addresses:
-    get:
-      tags:
-        - Customers
-      summary: Get Addresses
-      description: Fetch a list of customer billing addresses. (Business Only)
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Customer ID.
-            pattern: "^cus_.*$"
-      responses:
-        "200":
-          description: Successfully retrieved the list of customer addresses.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      addresses:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/CustomerAddress"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    post:
-      tags:
-        - Customers
-      summary: Add Address
-      description: Create a new customer billing address. (Business Only)
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Customer ID.
-            pattern: "^cus_.*$"
-      requestBody:
-        description: The details required to create a customer address.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostCustomerAddressRequest"
-      responses:
-        "200":
-          description: Successfully created customer address.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /customers/{customer_id}/addresses/{address_id}:
-    put:
-      tags:
-        - Customers
-      summary: Update Address
-      description: Modify customer address information. (Business Only)
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Customer ID.
-            pattern: "^cus_.*$"
-        - name: address_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Address ID.
-            pattern: "^cad_.*$"
-      requestBody:
-        description: The details required to update a customer address.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostCustomerAddressRequest"
-      responses:
-        "200":
-          description: Successfully updated customer address.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    delete:
-      tags:
-        - Customers
-      summary: Delete Address
-      description: Permanently remove a customer address. (Business Only)
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Customer ID.
-            pattern: "^cus_.*$"
-        - name: address_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Address ID.
-            pattern: "^cad_.*$"
-      responses:
-        "200":
-          description: Successfully removed customer address.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 
   /vouchers:
     get:
@@ -3579,6 +3354,350 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /plans:
+    get:
+      tags:
+        - Plans
+      summary: Get Plans
+      description: Fetch a list of plans. (Business Only)
+      responses:
+        "200":
+          description: Successfully retrieved the list of plans.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    type: object
+                    properties:
+                      plans:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Plan"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+        - Plans
+      summary: Create Plan
+      description: Create a new plan.
+      requestBody:
+        description: The details required to create a plan.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostPlanRequest"
+      responses:
+        "200":
+          description: Successfully created plan.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /plans/{plan_id}:
+    get:
+      tags:
+        - Plans
+      summary: Get Plan
+      description: Fetch plan information. (Business Only)
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+      responses:
+        "200":
+          description: Successfully retrieved plan details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    $ref: "#/components/schemas/Plan"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      tags:
+        - Plans
+      summary: Update Plan
+      description: Modify plan information. (Business Only)
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+      requestBody:
+        description: The details required to update a plan.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutPlanRequest"
+      responses:
+        "200":
+          description: Successfully updated plan.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Plans
+      summary: Remove Plan
+      description: Permanently delete a plan. (Business Only)
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+      responses:
+        "200":
+          description: Successfully removed plan.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /plans/{plan_id}/options:
+    post:
+      tags:
+        - Plans
+      summary: Add Price Option
+      description: Add a new price option to a plan.
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+      requestBody:
+        description: The details required to create a price option.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostPlanOptionRequest"
+      responses:
+        "200":
+          description: Successfully created plan options.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /plans/{plan_id}/options/{option_id}:
+    put:
+      tags:
+        - Plans
+      summary: Update Price Option
+      description: Modify price option information.
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+        - name: option_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Option ID.
+            pattern: "^plo_.*$"
+      requestBody:
+        description: The details required to update a plan option.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutPlanOptionRequest"
+      responses:
+        "200":
+          description: Successfully updated plan option.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+        - Plans
+      summary: Modify Price Option
+      description: Activate or deactivate a price option.
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+        - name: option_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Option ID.
+            pattern: "^plo_.*$"
+      responses:
+        "200":
+          description: Successfully modified plan option.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Plans
+      summary: Remove Price Option
+      description: Remove a price option from a plan.
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Plan ID.
+            pattern: "^pln_.*$"
+        - name: option_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Option ID.
+            pattern: "^plo_.*$"
+      responses:
+        "200":
+          description: Successfully removed plan option.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /invoices:
     get:
       tags:
@@ -3586,20 +3705,12 @@ paths:
       summary: Get Invoices
       description: Fetch a list of invoices. (Business Only)
       parameters:
-        - name: customer_id
+        - name: resource_id
           in: query
           required: false
           schema:
             type: string
-            description: The ID of the customer you want to filter based on.
-            pattern: "^cus_.*$"
-        - name: voucher_id
-          in: query
-          required: false
-          schema:
-            type: string
-            description: The ID of the voucher you want to filter based on.
-            pattern: "^vch_.*$"
+            description: The ID of the resource you want to filter based on. (e.g. Customer, Subscription or Voucher ID's)
         - name: currency
           in: query
           required: false
@@ -3661,7 +3772,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataResponse"
+                $ref: "#/components/schemas/SessionDataResponse"
         "4XX":
           description: Client error.
           content:
@@ -3817,95 +3928,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /invoices/{invoice_id}/session:
-    get:
-      tags:
-        - Invoices
-      summary: Generate Session
-      description: Generate a public checkout session.
-      parameters:
-        - name: invoice_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Invoice ID.
-            pattern: "^inv_.*$"
-      responses:
-        "200":
-          description: Successfully retrieved invoice session.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    $ref: "#/components/schemas/CheckoutSession"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 
   /invoices/{invoice_id}/items:
-    get:
-      tags:
-        - Invoices
-      summary: Get Items
-      description: Fetch a list of items attached to an invoice.
-      parameters:
-        - name: invoice_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Invoice ID.
-            pattern: "^inv_.*$"
-      responses:
-        "200":
-          description: Successfully retrieved the list of invoice items.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      items:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/InvoiceItem"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
         - Invoices
-      summary: Add Item
-      description: Add a new item to an invoice.
+      summary: Add Line Items
+      description: Add new line items to an invoice.
       parameters:
         - name: invoice_id
           in: path
@@ -3944,8 +3973,8 @@ paths:
     put:
       tags:
         - Invoices
-      summary: Update Item
-      description: Modify item information.
+      summary: Update Line Item
+      description: Modify line item information.
       parameters:
         - name: invoice_id
           in: path
@@ -3990,8 +4019,8 @@ paths:
     delete:
       tags:
         - Invoices
-      summary: Remove Item
-      description: Remove a item from an invoice.
+      summary: Remove Line Item
+      description: Remove a line item from an invoice.
       parameters:
         - name: invoice_id
           in: path
@@ -4010,6 +4039,263 @@ paths:
       responses:
         "200":
           description: Successfully removed invoice item.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /subscriptions:
+    get:
+      tags:
+        - Subscriptions
+      summary: Get Subscriptions
+      description: Fetch a list of subscriptions. (Business Only)
+      parameters:
+        - name: resource_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The ID of the resource you want to filter based on. (e.g. Customer or Payment method ID's)
+        - name: currency
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The currency you want to filter based on.
+            pattern: ^[A-Z]{3}$
+        - name: status
+          in: query
+          required: false
+          schema:
+            description: The status you want to filter based on.
+            $ref: "#/components/schemas/SubscriptionStatus"
+      responses:
+        "200":
+          description: Successfully retrieved the list of subscriptions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      subscriptions:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Subscription"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+        - Subscriptions
+      summary: Create Subscription
+      description: Create a new subscription. (Business Only)
+      requestBody:
+        description: The details required to create a subscription.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostSubscriptionRequest"
+      responses:
+        "200":
+          description: Successfully created subscription.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionDataResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /subscriptions/{subscription_id}:
+    get:
+      tags:
+        - Subscriptions
+      summary: Get Subscription
+      description: Fetch subscription information. (Business Only)
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Subscription ID.
+            pattern: "^sub_.*$"
+      responses:
+        "200":
+          description: Successfully retrieved subscription details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    $ref: "#/components/schemas/SubscriptionDetails"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+        - Subscriptions
+      summary: Update Subscription
+      description: Enable or Disable subscription auto renewal. (Business Only)
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Subscription ID.
+            pattern: "^sub_.*$"
+      responses:
+        "200":
+          description: Successfully modified subscription.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Subscriptions
+      summary: Remove Subscription
+      description: Permanently delete a subscription. (Business Only)
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Subscription ID.
+            pattern: "^sub_.*$"
+      responses:
+        "200":
+          description: Successfully removed subscription.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /subscriptions/{subscription_id}/restore:
+    post:
+      tags:
+        - Subscriptions
+      summary: Restore Subscription
+      description: Restore a subscription that's in a `requires-action` state. (Business Only)
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Subscription ID.
+            pattern: "^sub_.*$"
+      responses:
+        "200":
+          description: Successfully restored subscription.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /subscriptions/{subscription_id}/cancel:
+    post:
+      tags:
+        - Subscriptions
+      summary: Cancel Subscription
+      description: Cancel a subscription that's in a `active` or `trial` state. (Business Only)
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Subscription ID.
+            pattern: "^sub_.*$"
+      responses:
+        "200":
+          description: Successfully cancelled subscription.
           content:
             application/json:
               schema:
@@ -4097,7 +4383,7 @@ paths:
           schema:
             type: string
             enum:
-              - instant
+              - wallet
               - qr
               - card
               - bank
@@ -4109,7 +4395,7 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: "#/components/schemas/PostInitiatePcbPaymentRequest"
+                - $ref: "#/components/schemas/PostInitiateWalletPaymentRequest"
                 - $ref: "#/components/schemas/PostInitiateQrPaymentRequest"
                 - $ref: "#/components/schemas/PostInitiateCardPaymentRequest"
                 - $ref: "#/components/schemas/PostInitiateBankPaymentRequest"
@@ -4120,7 +4406,7 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/InstantPaymentResponse"
+                  - $ref: "#/components/schemas/WalletPaymentResponse"
                   - $ref: "#/components/schemas/QrPaymentResponse"
                   - $ref: "#/components/schemas/CardPaymentResponse"
                   - $ref: "#/components/schemas/BankPaymentResponse"
@@ -4163,7 +4449,7 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/PaymentDetails"
+                    $ref: "#/components/schemas/Payment"
         "4XX":
           description: Client error.
           content:
@@ -4216,30 +4502,162 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /payments/{payment_id}/cancel:
+
+  /providers:
+    get:
+      tags:
+        - Provider Connections
+      summary: Get Provider Connections
+      description: Fetch a list of connected providers. (Business Only)
+      responses:
+        "200":
+          description: Successfully retrieved the list of providers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      providers:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/PaymentProvider"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
-        - Payments
-      summary: Cancel Payment
-      description: Cancel a pending payment.
-      parameters:
-        - name: payment_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Payment ID.
-            pattern: "^pmt_.*$"
+        - Provider Connections
+      summary: Connect Provider
+      description: Connect a new provider. (Business Only)
       requestBody:
-        description: The details required to cancel a pending payment.
+        description: The details required to connect a provider.
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostCancelPaymentRequest"
+              $ref: "#/components/schemas/PostProviderRequest"
       responses:
         "200":
-          description: Successfully cancelled payment.
+          description: Successfully connected provider.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /providers/{connection_id}:
+    put:
+      tags:
+        - Provider Connections
+      summary: Update Provider Connection
+      description: Update connection API credentials. (Business Only)
+      parameters:
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Provider Connection ID.
+            pattern: "^bpc_.*$"
+      requestBody:
+        description: The provider specific credentials.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutProviderRequest"
+      responses:
+        "200":
+          description: Successfully updated provider connection.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+        - Provider Connections
+      summary: Modify Provider Connection
+      description: Enable or disable a provider connection. (Business Only)
+      parameters:
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Provider Connection ID.
+            pattern: "^bpc_.*$"
+      responses:
+        "200":
+          description: Successfully modified provider connection.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Provider Connections
+      summary: Remove Provider Connection
+      description: Permanently disconnect a provider. (Business Only)
+      parameters:
+        - name: connection_id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The Provider Connection ID.
+            pattern: "^bpc_.*$"
+      responses:
+        "200":
+          description: Successfully removed provider connection.
           content:
             application/json:
               schema:
@@ -4257,15 +4675,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /metrics/billing:
+  /metrics/invoices:
     get:
       tags:
         - Analytics
-      summary: Get Billing Metrics
-      description: Fetch billing metrics. (Business Only)
+      summary: Get Invoice Metrics
+      description: Fetch invoice metrics. (Business Only)
       responses:
         "200":
-          description: Successfully retrieved billing metrics.
+          description: Successfully retrieved invoice metrics.
           content:
             application/json:
               schema:
@@ -4275,7 +4693,38 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/BillingMetrics"
+                    $ref: "#/components/schemas/InvoiceMetrics"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /metrics/subscriptions:
+    get:
+      tags:
+        - Analytics
+      summary: Get Subscription Metrics
+      description: Fetch subscription metrics. (Business Only)
+      responses:
+        "200":
+          description: Successfully retrieved subscription metrics.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/SubscriptionMetrics"
         "4XX":
           description: Client error.
           content:
@@ -4668,6 +5117,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /payment-providers:
+    get:
+      tags:
+        - Resources
+      summary: Get Payment Providers
+      description: Fetch a list of supported business payment providers.
+      responses:
+        "200":
+          description: Successfully retrieved the list of supported payment providers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      payment_providers:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/PaymentProviderResource"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   securitySchemes:
     bearerAuth:
@@ -4688,7 +5173,7 @@ components:
       properties:
         success:
           type: boolean
-          example: false
+          default: false
         message:
           type: string
           description: A detailed error message.
@@ -4697,6 +5182,7 @@ components:
       properties:
         success:
           type: boolean
+          default: true
           description: Indicates if the request was successful.
         data:
           type: object
@@ -4704,6 +5190,33 @@ components:
             id:
               type: string
               description: The unique identifier of the newly created resource.
+    SessionDataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indicates if the request was successful.
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the newly created resource.
+            status:
+              type: string
+              description: The status of the newly created resource.
+            session:
+              type: object
+              default: null
+              description: The session details for collecting payment
+              properties:
+                url:
+                  type: string
+                  description: The checkout url
+                expires_in:
+                  type: string
+                  description: Session experation time.
     TokenResponse:
       type: object
       properties:
@@ -4753,8 +5266,8 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/TransferResponse"
-    InstantPaymentResponse:
-      title: Instant
+    WalletPaymentResponse:
+      title: Wallet
       type: object
       properties:
         success:
@@ -4763,21 +5276,14 @@ components:
         data:
           type: object
           properties:
-            id:
+            session:
               type: string
-              description: The unique identifier of the payment.
-              example: pmt_123456
-            status:
+              example: https://app.paisr.tech/pay/ey7bTCm6tur63CR6mzbuq23r
+              description: The url to redirect the customer to for collecting payment.
+            expires_in:
               type: string
-              description: The current state of the payment.
-              example: pending
-            metadata:
-              type: object
-              properties:
-                redirect_url:
-                  type: string
-                  description: The url to redirect the customer to collect payment.
-                  example: https://app.paisr.tech/pay/eyNl87il2x4rqkui2b4t6r
+              example: 30 Minutes
+              description: The session expiration time.
     QrPaymentResponse:
       title: QR
       type: object
@@ -4801,14 +5307,13 @@ components:
               properties:
                 provider:
                   type: string
-                  description: The name of the QR provider.
-                  example: uni5pay
+                  description: The slug of the QR provider.
                 qr_code:
                   type: string
-                  description: The encoded QR code.
+                  description: The code used to generate the QR image.
                 deep_link:
                   type: string
-                  description: The in-app url to redirect the customer to.
+                  description: The url for in-app payments.
     CardPaymentResponse:
       title: Card
       type: object
@@ -4825,6 +5330,9 @@ components:
               example: pmt_123456
             status:
               type: string
+              enum:
+                - failed
+                - approved
               description: The current state of the payment.
               example: approved
     BankPaymentResponse:
@@ -4837,21 +5345,14 @@ components:
         data:
           type: object
           properties:
-            id:
+            session:
               type: string
-              description: The unique identifier of the payment.
-              example: pmt_123456
-            status:
+              example: https://example.bank.com/pay/ey7bTCm6tur63CR6mzbuq23r
+              description: The url to redirect the customer to for collecting payment.
+            expires_in:
               type: string
-              description: The current state of the payment.
-              example: pending
-            metadata:
-              type: object
-              properties:
-                redirect_url:
-                  type: string
-                  description: The bank url to redirect the customer to collect payment.
-                  example: https://example-bank.com/pay/eyNo3ny1x7y
+              example: 30 Minutes
+              description: The session expiration time.
 
     # Enums
     ProfileStatus:
@@ -4928,6 +5429,16 @@ components:
         - paid
         - void
       example: "paid"
+    SubscriptionStatus:
+      type: string
+      enum:
+        - pending
+        - expired
+        - trial
+        - active
+        - requires-action
+        - cancelled
+      example: "active"
 
     PaymentStatus:
       type: string
@@ -5011,6 +5522,33 @@ components:
         slug:
           type: string
           example: DSB
+    PaymentProviderResource:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Paisr Pay
+        description:
+          type: string
+          example: A fast and secure way to pay in the Caribbean.
+        slug:
+          type: string
+          example: pcb
+        logo:
+          type: string
+          example: https://paisr.tech/favicon.ico
+        type:
+          type: string
+          example: wallet
+        available:
+          type: boolean
+          example: true
+        built_in:
+          type: boolean
+          example: true
+        supported_currencies:
+          type: array
+          example: ["SRD", "USD", "EUR"]
     PublicResource:
       type: object
       properties:
@@ -5223,10 +5761,6 @@ components:
         description:
           type: string
           example: Government ID
-        source_url:
-          type: string
-          format: url
-          example: https://uploads-ssl.paisr.tech/bus_123456/docs/123456
         verified:
           type: boolean
         created_at:
@@ -5240,6 +5774,9 @@ components:
           example: bus_123456
         status:
           $ref: "#/components/schemas/ProfileStatus"
+        country:
+          type: string
+          example: SR
         approved:
           type: boolean
         approved_at:
@@ -5317,7 +5854,7 @@ components:
           example: /v2/wallets
         user_agent:
           type: string
-          example: PostmanRuntime/7.39.1
+          example: PostmanRuntime
         response:
           type: object
           properties:
@@ -5382,7 +5919,7 @@ components:
         endpoint:
           type: string
           format: url
-          example: https://my-checkout.com/callback
+          example: https://api.example.com/callback
         paused:
           type: boolean
           example: false
@@ -5467,12 +6004,24 @@ components:
         id:
           type: string
           example: buw_123456
-        beneficiary_name:
-          type: string
-          example: Acme Inc
-        beneficiary_email:
-          type: string
-          example: finance@acme.com
+        beneficiary:
+          properties:
+            name:
+              type: string
+              example: Acme Inc
+            email:
+              type: string
+              example: finance@acme.com
+        profile:
+          properties:
+            nickname:
+              type: string
+              example: Acme
+            tag:
+              type: string
+              example: acmeinc
+            public:
+              type: boolean
         icon:
           type: string
           example: vault
@@ -5493,6 +6042,44 @@ components:
             - personal
             - business
           example: business
+        usage:
+          properties:
+            transfers:
+              type: object
+              properties:
+                current:
+                  type: number
+                  format: float
+                  example: 3598.75
+                max:
+                  type: number
+                  format: float
+                  example: 25000
+            deposits:
+              type: object
+              properties:
+                current:
+                  type: number
+                  format: float
+                  example: 550
+                max:
+                  type: number
+                  format: float
+                  example: 5000
+            withdrawals:
+              type: object
+              properties:
+                current:
+                  type: number
+                  format: float
+                  example: 4075
+                max:
+                  type: number
+                  format: float
+                  example: 25000
+            resets_at:
+              type: string
+              format: date-time
         created_at:
           type: string
           format: date-time
@@ -5502,58 +6089,6 @@ components:
         secret:
           type: string
           example: "5719"
-    WalletUsage:
-      type: object
-      properties:
-        transfers:
-          type: object
-          properties:
-            current:
-              type: number
-              format: float
-              example: 3598.75
-            max:
-              type: number
-              format: float
-              example: 25000
-        deposits:
-          type: object
-          properties:
-            current:
-              type: number
-              format: float
-              example: 550
-            max:
-              type: number
-              format: float
-              example: 5000
-        withdrawals:
-          type: object
-          properties:
-            current:
-              type: number
-              format: float
-              example: 4075
-            max:
-              type: number
-              format: float
-              example: 25000
-        resets_at:
-          type: string
-          format: date-time
-    WalletProfile:
-      type: object
-      properties:
-        nickname:
-          type: string
-          example: Acme
-        username:
-          type: string
-          example: acmeinc
-        avatar:
-          type: string
-        public:
-          type: boolean
     WalletBalance:
       type: object
       properties:
@@ -5602,7 +6137,7 @@ components:
           example: John Doe
         account_number:
           type: string
-          example: "******7346"
+          example: "123456789"
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
         currency:
@@ -5616,9 +6151,6 @@ components:
             name:
               type: string
               example: De Surinaamsche Bank
-            slug:
-              type: string
-              example: DSB
             swift_code:
               type: string
               example: SURBSRPA
@@ -5631,10 +6163,13 @@ components:
         id:
           type: string
           example: fav_123456
-        nickname:
+        full_name:
           type: string
           example: Jane Smith
-        username:
+        nickname:
+          type: string
+          example: Jane
+        tag:
           type: string
           example: janesmith
         avatar:
@@ -5650,14 +6185,14 @@ components:
           example: wpr_123456
         description:
           type: string
-          example: Example Link
+          example: Plant a tree initiative
         currency:
           type: string
           example: SRD
         amount:
           type: number
           format: float
-          example: 275.0
+          example: 25.00
         balance:
           type: object
           properties:
@@ -5967,32 +6502,68 @@ components:
         id:
           type: string
           example: cus_123456
+        name:
+          type: string
+          example: Jane Smith
         email:
           type: string
+          example: jane@example.com
         phone:
           type: string
-          example: "5978123456"
-        archived:
-          type: boolean
-          example: false
+          example: "+597-8123456"
+        default_currency:
+          type: string
+          example: SRD
+        billing_details:
+          default: null
+          $ref: "#/components/schemas/CustomerBillingDetails"
+        shipping_details:
+          default: null
+          $ref: "#/components/schemas/CustomerShippingDetails"
+        metadata:
+          type: object
+          default: null
+        session:
+          type: object
+          properties:
+            url:
+              type: string
+              example: https://portal.checkout.paisr.tech/ey7bTCm6tur63CR6mzbuq23r
+            expires_in:
+              type: string
+              example: 30 minutes
         created_at:
           type: string
           format: date-time
-    CustomerAddress:
+    CustomerPreview:
       type: object
       properties:
         id:
           type: string
-          example: cad_123456
-        default:
-          type: boolean
-        full_name:
+          example: cus_123456
+        name:
           type: string
           example: Jane Smith
-        address_line_1:
+        email:
+          type: string
+          example: jane@example.com
+        billing_details:
+          default: null
+          $ref: "#/components/schemas/CustomerBillingDetails"
+        shipping_details:
+          default: null
+          $ref: "#/components/schemas/CustomerShippingDetails"
+    CustomerBillingDetails:
+      type: object
+      required:
+        - line_1
+        - city
+        - country
+      properties:
+        line_1:
           type: string
           example: Example Street 10
-        address_line_2:
+        line_2:
           type: string
           example: Example Street 11
         city:
@@ -6006,9 +6577,72 @@ components:
         country:
           type: string
           example: SR
-        created_at:
+    CustomerShippingDetails:
+      type: object
+      required:
+        - name
+        - line_1
+        - city
+        - country
+      properties:
+        name:
           type: string
-          format: date-time
+          example: Jane Smith
+        phone:
+          type: string
+          example: "+597-8123456"
+        line_1:
+          type: string
+          example: Example Street 10
+        line_2:
+          type: string
+          example: Example Street 11
+        city:
+          type: string
+          example: Paramaribo
+        state:
+          type: string
+          example: Kwatta
+        zip_code:
+          type: string
+        country:
+          type: string
+          example: SR
+    CustomerProviderPreview:
+      title: Provider
+      type: object
+      properties:
+        id:
+          type: string
+          example: pmt_123456
+        type:
+          type: string
+          enum:
+            - credits
+            - wallet
+          example: wallet
+        provider:
+          type: string
+          example: Paisr Pay
+    CustomerCardPreview:
+      title: Card
+      type: object
+      properties:
+        id:
+          type: string
+          example: pmt_123456
+        type:
+          type: string
+          enum:
+            - card
+          default: card
+          example: card
+        last_four:
+          type: string
+          example: "4242"
+        brand:
+          type: string
+          example: visa
 
     Voucher:
       type: object
@@ -6047,6 +6681,92 @@ components:
           type: string
           format: date-time
 
+    Plan:
+      type: object
+      properties:
+        id:
+          type: string
+          example: pln_123456
+        title:
+          type: string
+          example: Premium Service
+        summary:
+          type: string
+          example: Get started with using our premium service.
+        type:
+          type: string
+          enum:
+            - standard
+            - metered
+          default: standard
+          example: standard
+        currency:
+          type: string
+          example: SRD
+        created_at:
+          type: string
+          format: date-time
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanOption"
+    PlanOption:
+      type: object
+      properties:
+        id:
+          type: string
+          example: plo_123456
+        description:
+          type: string
+          example: Monthly
+        active:
+          type: boolean
+          default: true
+          example: true
+        unit_price:
+          type: number
+          example: 9.99
+        billing_interval:
+          type: number
+          example: 30
+        trial_period:
+          type: number
+          example: 0
+        attributes:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+    PlanLineOption:
+      type: object
+      required:
+        - description
+        - unit_price
+        - billing_interval
+      properties:
+        description:
+          type: string
+          description: Short description about the option.
+        unit_price:
+          type: number
+          format: float
+          minimum: 0.01
+          description: Price per unit.
+        billing_interval:
+          type: number
+          minimum: 1
+          maximum: 365
+          description: The number of days for each billing interval. (e.g. 30 for monthly or 365 for yearly)
+        trial_period:
+          type: number
+          minimum: 0
+          maximum: 365
+          description: The number of days before the first billable invoice is due.
+        attributes:
+          type: object
+          maxProperties: 16
+          description: Custom key-value pairs that can be used for option specific features.
+
     Invoice:
       type: object
       properties:
@@ -6056,15 +6776,11 @@ components:
         sid:
           type: number
           example: 600783
+        subscription_id:
+          type: string
+          example: sub_123456
         customer:
-          type: object
-          properties:
-            id:
-              type: string
-              example: cus_123456
-            email:
-              type: string
-              format: email
+          $ref: "#/components/schemas/CustomerPreview"
         voucher:
           type: object
           properties:
@@ -6087,52 +6803,114 @@ components:
               type: number
               format: float
               example: 150
-            discounted_total:
+            discount_total:
               type: number
               format: float
               example: 15
-            due_total:
+            net_total:
               type: number
               format: float
               example: 135
-            tax_total:
-              type: number
-              format: float
-              example: 0
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
           type: string
           example: SRD
-        tax_flag:
-          type: boolean
-        tax_rate:
+        session:
           type: object
           properties:
-            slug:
+            url:
               type: string
-              example: VAT-SR
-            rate:
-              type: number
-              format: float
-              example: 10
-            rate_type:
-              $ref: "#/components/schemas/RateType"
-            country:
+              example: https://checkout.paisr.tech/ey7bTCm6tur63CR6mzbuq23r
+            expires_in:
               type: string
-              example: SR
-        issued_at:
-          type: string
-          format: date-time
+              example: 30 minutes
         due_at:
           type: string
           format: date-time
         paid_at:
           type: string
           format: date-time
+        void_at:
+          type: string
+          format: date-time
         created_at:
           type: string
           format: date-time
+    InvoiceDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          example: inv_123456
+        sid:
+          type: number
+          example: 600783
+        subscription_id:
+          type: string
+          example: sub_123456
+        customer:
+          $ref: "#/components/schemas/CustomerPreview"
+        voucher:
+          type: object
+          properties:
+            id:
+              type: string
+              example: vch_123456
+            type:
+              $ref: "#/components/schemas/RateType"
+            rate:
+              type: number
+              format: float
+              example: 10
+        summary:
+          type: string
+          example: A simple pizza order
+        amount:
+          type: object
+          properties:
+            sub_total:
+              type: number
+              format: float
+              example: 150
+            discount_total:
+              type: number
+              format: float
+              example: 15
+            net_total:
+              type: number
+              format: float
+              example: 135
+        status:
+          $ref: "#/components/schemas/InvoiceStatus"
+        currency:
+          type: string
+          example: SRD
+        session:
+          type: object
+          properties:
+            url:
+              type: string
+              example: https://checkout.paisr.tech/ey7bTCm6tur63CR6mzbuq23r
+            expires_in:
+              type: string
+              example: 30 minutes
+        due_at:
+          type: string
+          format: date-time
+        paid_at:
+          type: string
+          format: date-time
+        void_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        line_items:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvoiceItem"
     InvoiceItem:
       type: object
       properties:
@@ -6179,54 +6957,150 @@ components:
           minimum: 0
           description: Price per unit.
 
-    Payment:
+    Subscription:
       type: object
       properties:
         id:
           type: string
-          example: pmt_123456
-        sid:
-          type: number
-          example: 680297
-        description:
-          type: string
-          example: "Payment for Invoice #600783"
+          example: sub_123456
+        customer:
+          $ref: "#/components/schemas/CustomerPreview"
+        payment_method:
+          oneOf:
+            - $ref: "#/components/schemas/CustomerProviderPreview"
+            - $ref: "#/components/schemas/CustomerCardPreview"
+        status:
+          $ref: "#/components/schemas/SubscriptionStatus"
         currency:
           type: string
           example: SRD
-        status:
-          $ref: "#/components/schemas/PaymentStatus"
-        payment_method:
-          type: object
-          properties:
-            provider:
-              type: string
-              example: Paisr Pay
-            type:
-              $ref: "#/components/schemas/PaymentSourceType"
-        amount:
-          type: object
-          properties:
-            tax_total:
-              type: number
-              format: float
-              example: 0
-            due_total:
-              type: number
-              format: float
-              example: 135
-            fee_total:
-              type: number
-              format: float
-              example: 2.56
-            output_total:
-              type: number
-              format: float
-              example: 132.44
-        initiated_at:
+        auto_renew:
+          type: boolean
+          example: true
+        trial_start:
           type: string
           format: date-time
-    PaymentDetails:
+        trial_end:
+          type: string
+          format: date-time
+        billing_interval:
+          type: number
+          example: 30
+        billing_start:
+          type: string
+          format: date-time
+        billing_end:
+          type: string
+          format: date-time
+        last_renew_at:
+          type: string
+          format: date-time
+        next_renew_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    SubscriptionDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          example: sub_123456
+        customer:
+          $ref: "#/components/schemas/CustomerPreview"
+        payment_method:
+          oneOf:
+            - $ref: "#/components/schemas/CustomerProviderPreview"
+            - $ref: "#/components/schemas/CustomerCardPreview"
+        status:
+          $ref: "#/components/schemas/InvoiceStatus"
+        currency:
+          type: string
+          example: SRD
+        auto_renew:
+          type: boolean
+          example: true
+        trial_start:
+          type: string
+          format: date-time
+        trial_end:
+          type: string
+          format: date-time
+        billing_interval:
+          type: number
+          example: 30
+        billing_start:
+          type: string
+          format: date-time
+        billing_end:
+          type: string
+          format: date-time
+        last_renew_at:
+          type: string
+          format: date-time
+        next_renew_at:
+          type: string
+          format: date-time
+        cancelled:
+          type: boolean
+          example: true
+        cancelled_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        line_items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubscriptionItem"
+    SubscriptionItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: stm_123456
+        title:
+          type: string
+          example: Premium Service - Monthly
+        quantity:
+          type: number
+          example: 1
+        option:
+          type: object
+          properties:
+            id:
+              type: string
+              example: plo_123456
+            plan_id:
+              type: string
+              example: pln_123456
+            available:
+              type: boolean
+              example: true
+            unit_price:
+              type: number
+              format: float
+              example: 9.99
+        created_at:
+          type: string
+          format: date-time
+    SubscriptionLineItem:
+      type: object
+      required:
+        - option_id
+        - quantity
+      properties:
+        option_id:
+          type: string
+          description: The ID of the plan option to subscribe to.
+        quantity:
+          type: number
+          minimum: 1
+          description: Number of units.
+
+    Payment:
       type: object
       properties:
         id:
@@ -6289,16 +7163,16 @@ components:
         billing_details:
           type: object
           properties:
-            full_name:
+            name:
               type: string
               example: Jane Smith
             phone:
               type: string
               example: "5978123456"
-            address_line_1:
+            line_1:
               type: string
               example: Example Street 10
-            address_line_2:
+            line_2:
               type: string
               example: Example Street 11
             city:
@@ -6314,27 +7188,34 @@ components:
               example: SR
         notes:
           type: string
-          example: ""
+          default: null
+        metadata:
+          type: object
+          default: null
         initiated_at:
+          type: string
+          format: date-time
+        approved_at:
           type: string
           format: date-time
         settled_at:
           type: string
+          default: null
           format: date-time
         cancelled_at:
           type: string
+          default: null
           format: date-time
-          example: ""
         cancelled_by:
           type: string
-          example: ""
+          default: null
         reversed_at:
           type: string
+          default: null
           format: date-time
-          example: ""
         reversed_by:
           type: string
-          example: ""
+          default: null
     PaymentBillingDetails:
       type: object
       required:
@@ -6342,17 +7223,17 @@ components:
         - country
       description: Billing details of the customer.
       properties:
-        full_name:
+        name:
           type: string
           description: The name of the customer that will appear on receipts.
         phone:
           type: string
           format: tel
           description: The phone number of the customer. (eg +5978123456)
-        address_line_1:
+        line_1:
           type: string
           description: Billing address of the customer.
-        address_line_2:
+        line_2:
           type: string
           description: Billing address of the customer.
         city:
@@ -6368,7 +7249,53 @@ components:
           type: string
           description: Country code in ISO 3166-1 alpha-2 format.
 
-    BillingMetrics:
+    PaymentProvider:
+      type: object
+      properties:
+        id:
+          type: string
+          example: bpc_123456
+        name:
+          type: string
+          example: Paisr Pay
+        description:
+          type: string
+          example: The fastest way to make payments in the Caribbean.
+        logo:
+          type: string
+        type:
+          type: string
+          example: wallet
+        connector:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - enabled
+                - disabled
+              example: enabled
+            slug:
+              type: string
+              example: pcb
+            available:
+              type: boolean
+              example: true
+            built_in:
+              type: boolean
+              example: true
+            supported_currencies:
+              type: array
+              items:
+                type: string
+                example: ["SRD", "USD", "EUR"]
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    InvoiceMetrics:
       type: object
       properties:
         total:
@@ -6380,6 +7307,30 @@ components:
         paid:
           type: number
           example: 40
+    SubscriptionMetrics:
+      type: object
+      properties:
+        total:
+          type: number
+          example: 67
+        pending:
+          type: number
+          example: 9
+        active:
+          type: number
+          example: 40
+        trial:
+          type: number
+          example: 5
+        requires_action:
+          type: number
+          example: 3
+        expired:
+          type: number
+          example: 6
+        cancelled:
+          type: number
+          example: 4
     PaymentMetrics:
       type: object
       properties:
@@ -6402,16 +7353,6 @@ components:
         total:
           type: number
           example: 24
-
-    CheckoutSession:
-      type: object
-      properties:
-        session:
-          type: string
-          example: ey7bTCm6tur63CR6mzbuq23r
-        expires_in:
-          type: string
-          example: 30 Minutes
 
     # Request Schemas
     PutPersonalProfileRequest:
@@ -6871,7 +7812,7 @@ components:
             - zap
           description: Custom icon slug.
           example: vault
-    PutWalletRequest:
+    PatchWalletRequest:
       type: object
       properties:
         title:
@@ -6909,7 +7850,7 @@ components:
           description: Email address for email notifications. (Only available on business wallets)
           example: notifications@acme.com
 
-    PutWalletProfileRequest:
+    PutWalletRequest:
       type: object
       properties:
         nickname:
@@ -6917,14 +7858,14 @@ components:
           description: Short nickname.
           example: Acme Finance
           pattern: ^[a-zA-Z0-9 ]{6,48}$
-        username:
+        tag:
           type: string
-          description: Unique username used for transfer purposes.
+          description: Unique tag used for transfer purposes.
           example: acmefinance
           pattern: ^[a-z0-9]{6,48}$
         public:
           type: boolean
-          description: Flag indicating if wallet is searchable by other users.
+          description: Flag indicating if wallet is discoverable by other users.
           example: true
 
     PostWalletBalanceRequest:
@@ -6941,7 +7882,7 @@ components:
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         currency:
           type: string
-          description: Currency code.
+          description: Currency code in ISO 4217 format.
           example: SRD
           pattern: ^[A-Z]{3}$
         type:
@@ -6979,7 +7920,7 @@ components:
           description: Bank Swift/BIC.
         currency:
           type: string
-          description: Currency code.
+          description: Currency code in ISO 4217 format.
           minLength: 3
           maxLength: 3
     PatchWalletAccountRequest:
@@ -6996,11 +7937,11 @@ components:
     PostWalletContactRequest:
       type: object
       required:
-        - username
+        - tag
       properties:
-        username:
+        tag:
           type: string
-          description: Unique username of the wallet.
+          description: Unique tag of the wallet.
 
     PostWalletPaymentLinkRequest:
       type: object
@@ -7063,7 +8004,7 @@ components:
           description: Source balance ID.
         destination:
           type: string
-          description: Contact ID or unique username of the recipient wallet.
+          description: Contact ID or unique tag of the recipient wallet.
         amount:
           type: number
           format: float
@@ -7142,6 +8083,9 @@ components:
       required:
         - email
       properties:
+        name:
+          type: string
+          description: The name of the customer.
         email:
           type: string
           format: email
@@ -7149,10 +8093,25 @@ components:
         phone:
           type: string
           format: tel
-          description: The phone number of the customer. (eg +5978123456)
+          description: The phone number of the customer. (eg +597-8123456)
+        default_currency:
+          type: string
+          description: Default currency to apply on all new invoices of the customer.
+        billing_details:
+          description: The billing details of the customer
+          $ref: "#/components/schemas/CustomerBillingDetails"
+        shipping_details:
+          description: The shipping details of the customer
+          $ref: "#/components/schemas/CustomerBillingDetails"
+        metadata:
+          type: object
+          description: Up to 5 custom key-value pair
     PutCustomerRequest:
       type: object
       properties:
+        name:
+          type: string
+          description: The name of the customer.
         email:
           type: string
           format: email
@@ -7160,63 +8119,19 @@ components:
         phone:
           type: string
           format: tel
-          description: The phone number of the customer. (eg +5978123456)
-    PostCustomerAddressRequest:
-      type: object
-      required:
-        - full_name
-        - address_line_1
-        - city
-        - country
-      properties:
-        full_name:
+          description: The phone number of the customer. (eg +597-8123456)
+        default_currency:
           type: string
-          description: The name of the customer that will appear on receipts.
-        address_line_1:
-          type: string
-          description: Billing address of the customer.
-        address_line_2:
-          type: string
-          description: Billing address of the customer.
-        city:
-          type: string
-          description: City name.
-        state:
-          type: string
-          description: State name.
-        zip_code:
-          type: string
-          description: ZIP Code.
-        country:
-          type: string
-          description: Country code in ISO 3166-1 alpha-2 format.
-    PutCustomerAddressRequest:
-      type: object
-      properties:
-        is_default:
-          type: boolean
-          description: Flag indicating if this is the default billing address for the customer.
-        full_name:
-          type: string
-          description: The name of the customer that will appear on receipts.
-        address_line_1:
-          type: string
-          description: Billing address of the customer.
-        address_line_2:
-          type: string
-          description: Billing address of the customer.
-        city:
-          type: string
-          description: City name.
-        state:
-          type: string
-          description: State name.
-        zip_code:
-          type: string
-          description: ZIP Code.
-        country:
-          type: string
-          description: Country code in ISO 3166-1 alpha-2 format.
+          description: Default currency to apply on all new invoices of the customer.
+        billing_details:
+          description: The billing details of the customer
+          $ref: "#/components/schemas/CustomerBillingDetails"
+        shipping_details:
+          description: The shipping details of the customer
+          $ref: "#/components/schemas/CustomerBillingDetails"
+        metadata:
+          type: object
+          description: Up to 5 custom key-value pair
 
     # Vouchers
     PostVoucherRequest:
@@ -7227,7 +8142,7 @@ components:
         - code
         - amount
         - max_redeems
-        - expires_at
+        - expires
       properties:
         description:
           type: string
@@ -7247,7 +8162,7 @@ components:
           minimum: 1
           maximum: 1000000
           description: Max number of redeems.
-        expires_at:
+        expires:
           type: string
           description: Expiration date in relative time. (e.g. 'In 3 days')
     PutVoucherRequest:
@@ -7271,7 +8186,7 @@ components:
           minimum: 1
           maximum: 1000000
           description: Max number of redeems.
-        expires_at:
+        expires:
           type: string
           description: Expiration date in relative time. (e.g. 'In 3 days')
     PostApplyVoucherRequest:
@@ -7287,29 +8202,98 @@ components:
           type: string
           description: Unique code of the voucher.
 
+    # Plans
+    PostPlanRequest:
+      type: object
+      required:
+        - title
+        - summary
+        - currency
+      properties:
+        title:
+          type: string
+          description: Short description about the plan
+        summary:
+          type: string
+          description: A detailed summary explaining what the plan is about.
+        currency:
+          type: string
+          description: Currency code in ISO 4217 format.
+        options:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/PlanLineOption"
+    PutPlanRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Short description about the plan
+        summary:
+          type: string
+          description: A detailed summary detailing what the plan is about.
+        currency:
+          type: string
+          description: Currency code in ISO 4217 format.
+    PostPlanOptionRequest:
+      type: object
+      properties:
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanLineOption"
+    PutPlanOptionRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Detailed description about the option.
+        unit_price:
+          type: number
+          format: float
+          minimum: 0.01
+          description: Price per unit.
+        billing_interval:
+          type: number
+          minimum: 1
+          maximum: 365
+          description: The number of days for each billing interval. (e.g. 30 for monthly or 365 for yearly)
+        trial_period:
+          type: number
+          minimum: 0
+          maximum: 365
+          description: The number of days before the first billable invoice is due.
+        attributes:
+          type: object
+          maxProperties: 16
+          description: Custom key-value pairs that can be used for option specific features.
+
     # Invoices
     PostInvoiceRequest:
       type: object
       required:
-        - customer_id
+        - customer
         - summary
-        - currency
-        - due_at
+        - due
       properties:
-        customer_id:
+        customer:
           type: string
-          description: ID of the customer being billed.
+          description: ID or email address of the customer being billed.
         summary:
           type: string
           description: Detailed description about the invoice.
         currency:
           type: string
-          description: Currency code.
-        due_at:
+          description: Currency code in ISO 4217 format. Defaults to customer currency is none is provided.
+        due:
           type: string
           description: Due date in relative time. (e.g. 'In 3 days')
         items:
           type: array
+          minItems: 0
+          maxItems: 50
           items:
             $ref: "#/components/schemas/InvoiceLineItem"
     PutInvoiceRequest:
@@ -7320,8 +8304,8 @@ components:
           description: Detailed description about the invoice.
         currency:
           type: string
-          description: Currency code.
-        due_at:
+          description: Currency code in ISO 4217 format.
+        due:
           type: string
           description: Due date in relative time. (e.g. 'In 3 days')
     PostInvoiceItemRequest:
@@ -7329,6 +8313,8 @@ components:
       properties:
         items:
           type: array
+          minItems: 1
+          maxItems: 500
           items:
             $ref: "#/components/schemas/InvoiceLineItem"
     PutInvoiceItemRequest:
@@ -7345,43 +8331,63 @@ components:
           format: float
           description: Price per unit.
 
+    # Subscriptions
+    PostSubscriptionRequest:
+      type: object
+      required:
+        - customer
+        - auto_renew
+        - items
+      properties:
+        customer:
+          type: string
+          description: ID or email address of the customer being billed.
+        auto_renew:
+          type: boolean
+          description: Flag indicating if the subscription should auto renew the subscription at each billing cycle.
+        trial_period:
+          type: number
+          minimum: 0
+          maximum: 365
+          description: The number of days before the first billable invoice is due. Required if more than 1 item is being subscribed to.
+        items:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/SubscriptionLineItem"
+
     # Payments
-    PostInitiatePcbPaymentRequest:
+    PostInitiateWalletPaymentRequest:
       title: Instant
       type: object
       required:
         - invoice_id
         - redirect_url
-        - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
+          pattern: "^inv_.*$"
         redirect_url:
           type: string
+          format: url
           description: The url to redirect the customer to after completing the payment.
-        billing_details:
-          $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateQrPaymentRequest:
       title: QR
       type: object
       required:
         - invoice_id
         - provider
-        - redirect_url
         - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
+          pattern: "^inv_.*$"
         provider:
           type: string
-          enum:
-            - uni5pay
-          description: The name of the QR provider.
-        redirect_url:
-          type: string
-          description: The url to redirect the customer to after completing the payment.
+          description: The slug of the provider.
         billing_details:
           $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateCardPaymentRequest:
@@ -7389,44 +8395,41 @@ components:
       type: object
       required:
         - invoice_id
-        - redirect_url
         - card_details
         - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
-        redirect_url:
-          type: string
-          description: The url to redirect the customer to after completing the payment.
+          pattern: "^inv_.*$"
         card_details:
           type: object
           required:
-            - beneficiary
-            - pan
+            - card_holder
+            - card_number
             - exp_month
             - exp_year
             - brand
             - security
           properties:
-            beneficiary:
+            card_holder:
               type: string
-              description: Encoded cardholder name.
-            pan:
+              description: Full card holder name.
+            card_number:
               type: string
-              description: Encoded 16-digit card number.
+              description: Full 16-digit card number.
             exp_month:
-              type: number
+              type: string
               description: Card expiration month.
             exp_year:
-              type: number
+              type: string
               description: Card expiration year.
             brand:
               type: string
               description: Card brand.
             security:
               type: string
-              description: Encoded card security / CVC / CVV code.
+              description: Card CVC, CVV or PIN.
         billing_details:
           $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateBankPaymentRequest:
@@ -7436,27 +8439,18 @@ components:
         - invoice_id
         - swift_code
         - redirect_url
-        - billing_details
       properties:
         invoice_id:
           type: string
           description: The ID of the invoice being paid.
+          pattern: "^inv_.*$"
         swift_code:
           type: string
           description: Swift Code / BIC of the bank.
         redirect_url:
           type: string
+          format: url
           description: The url to redirect the customer to after completing the payment.
-        billing_details:
-          $ref: "#/components/schemas/PaymentBillingDetails"
-    PostCancelPaymentRequest:
-      type: object
-      required:
-        - note
-      properties:
-        note:
-          type: string
-          description: Reason for cancellation.
     PostRefundPaymentRequest:
       type: object
       required:
@@ -7476,3 +8470,31 @@ components:
         note:
           type: string
           description: Reason for refund.
+
+    # Payment Providers
+    PostProviderRequest:
+      type: object
+      required:
+        - slug
+      properties:
+        slug:
+          type: string
+          description: The slug of the provider.
+        merchant_id:
+          type: string
+          description: Provider specific Merchant ID.
+        secret_key:
+          type: string
+          description: Provider specific API credentials.
+    PutProviderRequest:
+      type: object
+      required:
+        - merchant_id
+        - secret_key
+      properties:
+        merchant_id:
+          type: string
+          description: Provider specific Merchant ID.
+        secret_key:
+          type: string
+          description: Provider specific API credentials.
