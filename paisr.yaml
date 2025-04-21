@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Paisr
-  version: 2.1.1
+  version: 2.1.2
   description: Paisr is the payment infrastructure for the Caribbean.
 servers:
   - url: https://api.live.paisr.tech/{version}
@@ -429,6 +429,22 @@ paths:
         - Members
       summary: Get Members
       description: Fetch a list of members. (Business Only)
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - invited
+              - accepted
+            description: The status of the members you want to filter based on.
+        - name: role
+          in: query
+          required: false
+          schema:
+            description: The status of the members you want to filter based on.
+            $ref: "#/components/schemas/BusinessMemberRole"
       responses:
         "200":
           description: Successfully retrieved the list of members.
@@ -1872,16 +1888,18 @@ paths:
           schema:
             type: string
             description: The ID of the balance you want to filter based on.
+            pattern: "^(ica_|bca_).*"
         - name: status
           in: query
           required: false
           schema:
             type: string
             enum:
-              - pending
               - processing
               - settled
               - requires-approval
+              - declined
+              - failed
               - cancelled
             description: The status of the transactions you want to filter based on.
         - name: type
@@ -1905,6 +1923,14 @@ paths:
               - Payout
               - EcomPay
             description: The method of the transactions you want to filter based on.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of transactions to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of wallet transactions.
@@ -2002,6 +2028,12 @@ paths:
             type: string
             description: The Wallet ID.
             pattern: "^(buw_|inw_).*"
+        - name: type
+          in: query
+          required: false
+          schema:
+            description: The type of balances you want to filter based on.
+            $ref: "#/components/schemas/WalletBalanceType"
       responses:
         "200":
           description: Successfully retrieved the list of wallet balances.
@@ -3724,6 +3756,14 @@ paths:
           schema:
             description: The status you want to filter based on.
             $ref: "#/components/schemas/InvoiceStatus"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of invoices to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of invoices.
@@ -4082,6 +4122,14 @@ paths:
           schema:
             description: The status you want to filter based on.
             $ref: "#/components/schemas/SubscriptionStatus"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of subscriptions to return in the response.
+            minimum: 1
+            maximum: 1000            
       responses:
         "200":
           description: Successfully retrieved the list of subscriptions.
@@ -4320,13 +4368,12 @@ paths:
       summary: Get Payments
       description: Fetch a list payments. (Business Only)
       parameters:
-        - name: invoice_id
+        - name: resource_id
           in: query
           required: false
           schema:
             type: string
-            description: The ID of the invoice you want to filter based on.
-            pattern: "^inv_.*$"
+            description: The ID of the resource you want to filter based on (e.g. Invoice).
         - name: currency
           in: query
           required: false
@@ -4340,6 +4387,20 @@ paths:
           schema:
             description: The status you want to filter based on.
             $ref: "#/components/schemas/PaymentStatus"
+        - name: method
+          in: query
+          required: false
+          schema:
+            description: The method you want to filter based on.
+            $ref: "#/components/schemas/PaymentSourceType"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of payments to return in the response.
+            minimum: 1
+            maximum: 1000            
       responses:
         "200":
           description: Successfully retrieved the list of payments.
@@ -4832,8 +4893,16 @@ paths:
             type: string
             enum:
               - token
-              - member
+              - user
             description: The authentication flow to filter based on.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of logs to return in the response.
+            minimum: 1
+            maximum: 1000            
       responses:
         "200":
           description: Successfully retrieved the list of logs.
@@ -5436,7 +5505,7 @@ components:
         - expired
         - trial
         - active
-        - requires-action
+        - suspended
         - cancelled
       example: "active"
 
@@ -5444,6 +5513,7 @@ components:
       type: string
       enum:
         - pending
+        - failed
         - approved
         - settled
         - refunded
@@ -5452,12 +5522,12 @@ components:
     PaymentSourceType:
       type: string
       enum:
-        - platform
+        - wallet
         - qr
         - card
         - bank
         - other
-      example: "platform"
+      example: "wallet"
     PaymentMetricStatusSummary:
       type: object
       properties:
@@ -5825,7 +5895,6 @@ components:
           enum:
             - invited
             - accepted
-            - removed
           example: accepted
         created_at:
           type: string
@@ -5871,7 +5940,6 @@ components:
               enum:
                 - token
                 - user
-                - member
               example: token
             uuid:
               type: string
@@ -7322,7 +7390,7 @@ components:
         trial:
           type: number
           example: 5
-        requires_action:
+        suspended:
           type: number
           example: 3
         expired:
@@ -7342,6 +7410,8 @@ components:
         approved:
           $ref: "#/components/schemas/PaymentMetricStatusSummary"
         settled:
+          $ref: "#/components/schemas/PaymentMetricStatusSummary"
+        failed:
           $ref: "#/components/schemas/PaymentMetricStatusSummary"
         cancelled:
           $ref: "#/components/schemas/PaymentMetricStatusSummary"
