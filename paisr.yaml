@@ -2034,6 +2034,13 @@ paths:
           schema:
             description: The type of balances you want to filter based on.
             $ref: "#/components/schemas/WalletBalanceType"
+        - name: currency
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The currency you want to filter based on.
+            pattern: ^[A-Z]{3}$
       responses:
         "200":
           description: Successfully retrieved the list of wallet balances.
@@ -3392,6 +3399,37 @@ paths:
         - Plans
       summary: Get Plans
       description: Fetch a list of plans. (Business Only)
+      parameters:
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The type you want to filter based on.
+            enum:
+              - standard
+              - metered
+        - name: currency
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The currency you want to filter based on.
+            pattern: ^[A-Z]{3}$
+        - name: active
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: The state of options you want to filter based on.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of plans to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of plans.
@@ -3467,6 +3505,12 @@ paths:
             type: string
             description: The Plan ID.
             pattern: "^pln_.*$"
+        - name: active
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: The state of options you want to filter based on.
       responses:
         "200":
           description: Successfully retrieved plan details.
@@ -4129,7 +4173,7 @@ paths:
             type: number
             description: The number of subscriptions to return in the response.
             minimum: 1
-            maximum: 1000            
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of subscriptions.
@@ -4400,7 +4444,7 @@ paths:
             type: number
             description: The number of payments to return in the response.
             minimum: 1
-            maximum: 1000            
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of payments.
@@ -4902,7 +4946,7 @@ paths:
             type: number
             description: The number of logs to return in the response.
             minimum: 1
-            maximum: 1000            
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of logs.
@@ -6191,6 +6235,28 @@ components:
           example: false
         type:
           $ref: "#/components/schemas/WalletBalanceType"
+        treasurer:
+          type: object
+          default: {}
+          properties:
+            name:
+              type: string
+              example: PAISR Treasury
+            iban:
+              type: string
+              example: ABC123456789
+            type:
+              type: string
+              example: checking
+            bank:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Southern Commercial Bank
+                swift:
+                  type: string
+                  example: SOUOSRPP
         created_at:
           type: string
           format: date-time
@@ -6363,6 +6429,12 @@ components:
         reference:
           type: string
           example: "Payment for Invoice #199027"
+        balance_before:
+          type: number
+          example: 75.00
+        balance_after:
+          type: number
+          example: 50.00
         created_at:
           type: string
           format: date-time
@@ -6509,6 +6581,12 @@ components:
         reference:
           type: string
           example: For services renderred
+        balance_before:
+          type: number
+          example: 75.00
+        balance_after:
+          type: number
+          example: 50.00
         created_at:
           type: string
           format: date-time
@@ -6557,9 +6635,15 @@ components:
                   type: string
         reference:
           type: string
+        balance_before:
+          type: number
+          example: 0.00
+        balance_after:
+          type: number
+          example: 75.00
         created_at:
           type: string
-          format: datte-time
+          format: date-time
         processed_at:
           type: string
           format: date-time
@@ -6800,6 +6884,9 @@ components:
         trial_period:
           type: number
           example: 0
+        subscribers:
+          type: number
+          example: 10
         attributes:
           type: object
         created_at:
