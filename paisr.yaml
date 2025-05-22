@@ -1,8 +1,15 @@
-openapi: 3.0.3
+openapi: 3.0.4
 info:
-  title: Paisr
+  title: Paisr API
   version: 2.2.0
   description: Paisr is the payment infrastructure for the Caribbean.
+  contact:
+    name: Customer Support
+    email: support@paisr.tech
+    url: https://paisr.tech/contact
+  termsOfService: https://paisr.tech/legal/terms-of-service
+externalDocs:
+  url: https://docs.paisr.tech
 servers:
   - url: https://api.live.paisr.tech/{version}
     description: Live Server
@@ -4501,6 +4508,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
   schemas:
     BaseResponse:
       type: object
@@ -5226,6 +5234,7 @@ components:
           example: janesmith
         avatar:
           type: string
+          example: https://gravatar.com/avatars/uhofasobobao
         created_at:
           type: string
           format: date-time
