@@ -4214,7 +4214,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /audits/logs:
+  /logs:
     get:
       tags:
         - Logs
