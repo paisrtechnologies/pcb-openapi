@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: Paisr API
-  version: 2.2.0
+  version: 2.2.1
   description: Paisr is the payment infrastructure for the Caribbean.
   contact:
     name: Customer Support
@@ -33,39 +33,35 @@ tags:
   - name: Business
     description: Business only resource.
   - name: Tokens
-    description: Create, manage, and revoke profile access tokens securely.
+    description: Create, manage, and revoke access tokens securely.
   - name: Webhooks
     description: Configure, test, and monitor webhooks for real-time updates.
-  - name: Members
-    description: Manage business profile members, including invites and updates.
   - name: Wallets
-    description: Create and manage digital wallets, connected accounts, and transactions.
+    description: Create and manage digital wallets, connected accounts, contacts etc.
   - name: Balances
-    description: Monitor and manage wallet balances and associated transactions.
+    description: Create and manage virtual wallet balances.
   - name: Transactions
-    description: Manage wallet transactions.
+    description: Read and filter wallet transactions.
   - name: Transfers
-    description: Initiate and manage peer-to-peer, bank, or batch transfers.
+    description: Initiate method based transfers.
   - name: Invoices
     description: Generate, send, and manage invoices.
   - name: Subscriptions
     description: Create and manage subscriptions.
   - name: Customers
-    description: Manage customer profiles, addresses, and other resources.
+    description: Create and manage customers.
   - name: Vouchers
-    description: Create, manage, and track usage of discounts.
+    description: Create, manage, and track the usage of discounts.
   - name: Plans
     description: Create and manage billing plans.
   - name: Payments
-    description: Manage, collect and process payments.
+    description: Initiate and manage payments.
   - name: Provider Connections
     description: Manage built-in and external payment provider connections.
   - name: Analytics
-    description: Access analytic metrics on resources.
+    description: Access metrics on resources.
   - name: Logs
     description: Access API activity logs.
-  - name: Resources
-    description: Access publicly available resources and metadata.
 
 paths:
   /access-tokens:
@@ -4339,222 +4335,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /banks:
-    get:
-      tags:
-        - Resources
-      summary: Get Banks
-      description: Fetch a list of supported banks.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported banks.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      banks:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/BankResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /scopes:
-    get:
-      tags:
-        - Resources
-      summary: Get Scopes
-      description: Fetch a list of supported access token scopes.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported token scopes.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      scopes:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PublicResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /events:
-    get:
-      tags:
-        - Resources
-      summary: Get Events
-      description: Fetch a list of supported webhook event types.
-      responses:
-        "200":
-          description: Successfully retrieved the list of webhook event types.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      events:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PublicResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /countries:
-    get:
-      tags:
-        - Resources
-      summary: Get Countries
-      description: Fetch a list of supported countries.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported countries.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      countries:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/CountryResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /currencies:
-    get:
-      tags:
-        - Resources
-      summary: Get Currencies
-      description: Fetch a list of supported currencies.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported currencies.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      currencies:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/CurrencyResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /payment-providers:
-    get:
-      tags:
-        - Resources
-      summary: Get Payment Providers
-      description: Fetch a list of supported business payment providers.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported payment providers.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      payment_providers:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PaymentProviderResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 components:
   securitySchemes:
     bearerAuth:
@@ -4562,6 +4342,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    # Responses
     BaseResponse:
       type: object
       properties:
@@ -4763,22 +4544,46 @@ components:
       enum:
         - fiat
         - crypto
-      example: "fiat"
+      example: fiat
       description: Type of wallet.
+    WalletIconType:
+      type: string
+      enum:
+        - bitcoin
+        - blend
+        - dollar-sign
+        - flame
+        - gem
+        - headset
+        - heart
+        - infinity
+        - landmark
+        - leaf
+        - piggy-bank
+        - pyramid
+        - snowflake
+        - sparkles
+        - tree-palm
+        - trophy
+        - vault
+        - wallet
+        - zap
+      example: wallet
+      description: Custom icon of the wallet
     WalletBalanceType:
       type: string
       enum:
         - primary
         - saving
         - investment
-      example: "primary"
+      example: primary
       description: Type of balance.
     WalletAccountType:
       type: string
       enum:
         - checking
         - saving
-      example: "checking"
+      example: checking
       description: Type of account.
 
     RateType:
@@ -4786,7 +4591,56 @@ components:
       enum:
         - percentage
         - fixed
-      example: "percentage"
+      example: percentage
+      description: The applicable rate type.
+    CurrencyType:
+      type: string
+      enum:
+        - SRD
+        - USD
+        - EUR
+      example: SRD
+      description: Currency code in ISO 4217 format.
+    CountryType:
+      type: string
+      enum:
+        - AG
+        - AW
+        - BS
+        - BB
+        - BM
+        - CW
+        - DM
+        - GD
+        - GY
+        - JM
+        - KN
+        - LC
+        - VC
+        - SR
+        - TT
+      example: SR
+      description: Currency code in ISO 3166-1 alpha-2 format.
+    BankSwiftType:
+      type: string
+      enum:
+        - SURBSRPA
+        - FBNASRPA
+        - GODOSRPA
+        - HAKRSRPA
+        - RBNKSRPA
+        - SOUOSRPP
+      example: SOUOSRPP
+      description: Swift Code / BIC of the bank.
+    PaymentProviderType:
+      type: string
+      enum:
+        - pcb
+        - pbb
+        - card
+        - uni5pay
+      example: card
+      description: Unique slug for the provider.
 
     InvoiceStatus:
       type: string
@@ -4826,6 +4680,8 @@ components:
         - bank
         - other
       example: "wallet"
+
+    # Data Schemas
     PaymentMetricStatusSummary:
       type: object
       properties:
@@ -4840,90 +4696,6 @@ components:
               type: string
             total:
               type: number
-
-    # Data Schemas
-    CountryResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Suriname
-        code:
-          type: number
-          example: 740
-        currency:
-          type: string
-          example: SRD
-        dail_code:
-          type: number
-          example: 597
-        alpha_2:
-          type: string
-          example: SR
-        alpha_3:
-          type: string
-          example: SUR
-    CurrencyResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Surinamese Dollar
-        code:
-          type: string
-          example: SRD
-        alt_code:
-          type: number
-          example: 968
-        symbol:
-          type: string
-          example: $
-    BankResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: De Surinaamsche Bank
-        swift:
-          type: string
-          example: SURBSRPA
-        slug:
-          type: string
-          example: DSB
-    PaymentProviderResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Paisr Pay
-        description:
-          type: string
-          example: A fast and secure way to pay in the Caribbean.
-        slug:
-          type: string
-          example: pcb
-        logo:
-          type: string
-          example: https://paisr.tech/favicon.ico
-        type:
-          type: string
-          example: wallet
-        available:
-          type: boolean
-          example: true
-        built_in:
-          type: boolean
-          example: true
-        supported_currencies:
-          type: array
-          example: ["SRD", "USD", "EUR"]
-    PublicResource:
-      type: object
-      properties:
-        description:
-          type: string
-        slug:
-          type: string
 
     AuditLog:
       type: object
@@ -5192,8 +4964,7 @@ components:
           type: object
           properties:
             code:
-              type: string
-              example: SRD
+              $ref: "#/components/schemas/CurrencyType"
             symbol:
               type: string
               example: $
@@ -5203,7 +4974,7 @@ components:
             running:
               type: number
               format: float
-              example: 750170.75
+              example: 2802.75
             holding:
               type: number
               format: float
@@ -5233,8 +5004,7 @@ components:
                   type: string
                   example: Southern Commercial Bank
                 swift:
-                  type: string
-                  example: SOUOSRPP
+                  $ref: "#/components/schemas/BankSwiftType"
         created_at:
           type: string
           format: date-time
@@ -5253,8 +5023,7 @@ components:
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         verified:
           type: boolean
         bank:
@@ -5262,10 +5031,9 @@ components:
           properties:
             name:
               type: string
-              example: De Surinaamsche Bank
+              example: Southern Commercial Bank
             swift_code:
-              type: string
-              example: SURBSRPA
+              $ref: "#/components/schemas/BankSwiftType"
         created_at:
           type: string
           format: date-time
@@ -5300,8 +5068,7 @@ components:
           type: string
           example: Plant a tree initiative
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         amount:
           type: number
           format: float
@@ -5643,8 +5410,7 @@ components:
           type: string
           example: "+597-8123456"
         default_currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         billing_details:
           default: null
           $ref: "#/components/schemas/CustomerBillingDetails"
@@ -5832,8 +5598,7 @@ components:
           default: standard
           example: standard
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         created_at:
           type: string
           format: date-time
@@ -5948,8 +5713,7 @@ components:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         session:
           type: object
           properties:
@@ -6018,8 +5782,7 @@ components:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         session:
           type: object
           properties:
@@ -6106,8 +5869,7 @@ components:
         status:
           $ref: "#/components/schemas/SubscriptionStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         auto_renew:
           type: boolean
           example: true
@@ -6150,8 +5912,7 @@ components:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         auto_renew:
           type: boolean
           example: true
@@ -6250,8 +6011,7 @@ components:
           type: string
           example: "Payment for Invoice #600783"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         status:
           $ref: "#/components/schemas/PaymentStatus"
         payment_method:
@@ -6410,8 +6170,7 @@ components:
                 - disabled
               example: enabled
             slug:
-              type: string
-              example: pcb
+              $ref: "#/components/schemas/PaymentProviderType"
             available:
               type: boolean
               example: true
@@ -6509,7 +6268,6 @@ components:
           items:
             type: string
             example: invoices.read
-
     PutAccessTokenRequest:
       type: object
       required:
@@ -6592,29 +6350,7 @@ components:
           example: Acme Cash
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         icon:
-          type: string
-          enum:
-            - bitcoin
-            - blend
-            - dollar-sign
-            - flame
-            - gem
-            - headset
-            - heart
-            - infinity
-            - landmark
-            - leaf
-            - piggy-bank
-            - pyramid
-            - snowflake
-            - sparkles
-            - tree-palm
-            - trophy
-            - vault
-            - wallet
-            - zap
-          description: Custom icon slug.
-          example: vault
+          $ref: "#/components/schemas/WalletIconType"
     PatchWalletRequest:
       type: object
       properties:
@@ -6624,35 +6360,12 @@ components:
           example: Acme Cash
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         icon:
-          type: string
-          enum:
-            - bitcoin
-            - blend
-            - dollar-sign
-            - flame
-            - gem
-            - headset
-            - heart
-            - infinity
-            - landmark
-            - leaf
-            - piggy-bank
-            - pyramid
-            - snowflake
-            - sparkles
-            - tree-palm
-            - trophy
-            - vault
-            - wallet
-            - zap
-          description: Custom icon slug.
-          example: vault
+          $ref: "#/components/schemas/WalletIconType"
         email:
           type: string
           format: email
           description: Email address for email notifications. (Only available on business wallets)
           example: notifications@acme.com
-
     PutWalletRequest:
       type: object
       properties:
@@ -6684,10 +6397,7 @@ components:
           example: SRD Revenue
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         currency:
-          type: string
-          description: Currency code in ISO 4217 format.
-          example: SRD
-          pattern: ^[A-Z]{3}$
+          $ref: "#/components/schemas/CurrencyType"
         type:
           $ref: "#/components/schemas/WalletBalanceType"
     PutWalletBalanceRequest:
@@ -6719,13 +6429,9 @@ components:
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
         swift_code:
-          type: string
-          description: Bank Swift/BIC.
+          $ref: "#/components/schemas/BankSwiftType"
         currency:
-          type: string
-          description: Currency code in ISO 4217 format.
-          minLength: 3
-          maxLength: 3
+          $ref: "#/components/schemas/CurrencyType"
     PatchWalletAccountRequest:
       type: object
       required:
@@ -6898,8 +6604,8 @@ components:
           format: tel
           description: The phone number of the customer. (eg +597-8123456)
         default_currency:
-          type: string
           description: Default currency to apply on all new invoices of the customer.
+          $ref: "#/components/schemas/CurrencyType"
         billing_details:
           description: The billing details of the customer
           $ref: "#/components/schemas/CustomerBillingDetails"
@@ -6924,8 +6630,8 @@ components:
           format: tel
           description: The phone number of the customer. (eg +597-8123456)
         default_currency:
-          type: string
           description: Default currency to apply on all new invoices of the customer.
+          $ref: "#/components/schemas/CurrencyType"
         billing_details:
           description: The billing details of the customer
           $ref: "#/components/schemas/CustomerBillingDetails"
@@ -7020,7 +6726,7 @@ components:
           type: string
           description: A detailed summary explaining what the plan is about.
         currency:
-          type: string
+          $ref: "#/components/schemas/CurrencyType"
           description: Currency code in ISO 4217 format.
         options:
           type: array
@@ -7038,7 +6744,7 @@ components:
           type: string
           description: A detailed summary detailing what the plan is about.
         currency:
-          type: string
+          $ref: "#/components/schemas/CurrencyType"
           description: Currency code in ISO 4217 format.
     PostPlanOptionRequest:
       type: object
@@ -7088,8 +6794,8 @@ components:
           type: string
           description: Detailed description about the invoice.
         currency:
-          type: string
-          description: Currency code in ISO 4217 format. Defaults to customer currency is none is provided.
+          $ref: "#/components/schemas/CurrencyType"
+          description: Currency to be used. Defaults to customer currency is none is provided.
         due:
           type: string
           description: Due date in relative time. (e.g. 'In 3 days')
@@ -7106,8 +6812,7 @@ components:
           type: string
           description: Detailed description about the invoice.
         currency:
-          type: string
-          description: Currency code in ISO 4217 format.
+          $ref: "#/components/schemas/CurrencyType"
         due:
           type: string
           description: Due date in relative time. (e.g. 'In 3 days')
@@ -7189,8 +6894,7 @@ components:
           description: The ID of the invoice being paid.
           pattern: "^inv_.*$"
         provider:
-          type: string
-          description: The slug of the provider.
+          $ref: "#/components/schemas/PaymentProviderType"
         billing_details:
           $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateCardPaymentRequest:
@@ -7248,8 +6952,7 @@ components:
           description: The ID of the invoice being paid.
           pattern: "^inv_.*$"
         swift_code:
-          type: string
-          description: Swift Code / BIC of the bank.
+          $ref: "#/components/schemas/BankSwiftType"
         redirect_url:
           type: string
           format: url
@@ -7281,8 +6984,7 @@ components:
         - slug
       properties:
         slug:
-          type: string
-          description: The slug of the provider.
+          $ref: "#/components/schemas/PaymentProviderType"
         merchant_id:
           type: string
           description: Provider specific Merchant ID.
