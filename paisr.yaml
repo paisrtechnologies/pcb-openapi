@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+
 openapi: 3.0.4
 info:
   title: Paisr API
@@ -2164,7 +2166,6 @@ paths:
               - peer
               - move
               - bank
-              - batch
             description: The Transfer Method.
       requestBody:
         description: The details required to initiate the transfer.
@@ -2174,18 +2175,47 @@ paths:
             schema:
               oneOf:
                 - $ref: "#/components/schemas/PostPeerTransferRequest"
-                - $ref: "#/components/schemas/PostBankTransferRequest"
                 - $ref: "#/components/schemas/PostMoveTransferRequest"
-                - $ref: "#/components/schemas/PostBatchTransferRequest"
+                - $ref: "#/components/schemas/PostBankTransferRequest"
       responses:
         "200":
           description: Successfully initiated transfer.
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/TransferResponse"
-                  - $ref: "#/components/schemas/TransferBatchResponse"
+                $ref: "#/components/schemas/TransferResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /transfers/initiate/batch:
+    post:
+      tags:
+        - Transfers
+      summary: Batch Transfer
+      description: Start a batch transfer operation.
+      requestBody:
+        description: The details required to initiate the transfers.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostBatchTransferRequest"
+      responses:
+        "200":
+          description: Successfully initiated transfers.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferBatchResponse"
         "4XX":
           description: Client error.
           content:
