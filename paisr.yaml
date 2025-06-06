@@ -6592,11 +6592,9 @@ components:
                 enum:
                   - peer
                   - bank
-                  - move
                 example: peer
               details:
                 oneOf:
-                  - $ref: "#/components/schemas/PostMoveTransferRequest"
                   - $ref: "#/components/schemas/PostPeerTransferRequest"
                   - $ref: "#/components/schemas/PostBankTransferRequest"
     PostApproveTransferRequest:
