@@ -1,8 +1,17 @@
-openapi: 3.0.3
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+
+openapi: 3.0.4
 info:
-  title: Paisr
-  version: 2.1.1
+  title: Paisr API
+  version: 2.2.1
   description: Paisr is the payment infrastructure for the Caribbean.
+  contact:
+    name: Customer Support
+    email: support@paisr.tech
+    url: https://paisr.tech/contact
+  termsOfService: https://paisr.tech/legal/terms-of-service
+externalDocs:
+  url: https://docs.paisr.tech
 servers:
   - url: https://api.live.paisr.tech/{version}
     description: Live Server
@@ -23,724 +32,40 @@ servers:
 security:
   - bearerAuth: []
 tags:
-  - name: Profiles
-    description: Manage your personal or business profile details, documents, addresses and other resources.
+  - name: Business
+    description: Business only resource.
   - name: Tokens
-    description: Create, manage, and revoke profile access tokens securely.
+    description: Create, manage, and revoke access tokens securely.
   - name: Webhooks
     description: Configure, test, and monitor webhooks for real-time updates.
-  - name: Members
-    description: Manage business profile members, including invites and updates.
   - name: Wallets
-    description: Create and manage digital wallets, connected accounts, and transactions.
+    description: Create and manage digital wallets, connected accounts, contacts etc.
   - name: Balances
-    description: Monitor and manage wallet balances and associated transactions.
+    description: Create and manage virtual wallet balances.
   - name: Transactions
-    description: Manage wallet transactions.
+    description: Read and filter wallet transactions.
   - name: Transfers
-    description: Initiate and manage peer-to-peer, bank, or batch transfers.
+    description: Initiate method based transfers.
   - name: Invoices
     description: Generate, send, and manage invoices.
   - name: Subscriptions
     description: Create and manage subscriptions.
   - name: Customers
-    description: Manage customer profiles, addresses, and other resources.
+    description: Create and manage customers.
   - name: Vouchers
-    description: Create, manage, and track usage of discounts.
+    description: Create, manage, and track the usage of discounts.
   - name: Plans
     description: Create and manage billing plans.
   - name: Payments
-    description: Manage, collect and process payments.
+    description: Initiate and manage payments.
   - name: Provider Connections
     description: Manage built-in and external payment provider connections.
   - name: Analytics
-    description: Access analytic metrics on resources.
+    description: Access metrics on resources.
   - name: Logs
     description: Access API activity logs.
-  - name: Resources
-    description: Access publicly available resources and metadata.
 
 paths:
-  /profiles:
-    get:
-      tags:
-        - Profiles
-      summary: Get Profile
-      description: Fetch profile information.
-      responses:
-        "200":
-          description: Successfully retrieved profile.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    oneOf:
-                      - $ref: "#/components/schemas/BusinessProfile"
-                      - $ref: "#/components/schemas/PersonalProfile"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    put:
-      tags:
-        - Profiles
-      summary: Update Profile
-      description: Modify profile information.
-      requestBody:
-        description: The details required to update your profile.
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: "#/components/schemas/PutBusinessProfileRequest"
-                - $ref: "#/components/schemas/PutPersonalProfileRequest"
-      responses:
-        "200":
-          description: Successfully updated profile details.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    patch:
-      tags:
-        - Profiles
-      summary: Submit Application
-      description: Submit your profile for approval.
-      responses:
-        "200":
-          description: Application submitted successfully.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/status:
-    get:
-      tags:
-        - Profiles
-      summary: Get Status
-      description: Fetch profile verification status.
-      responses:
-        "200":
-          description: Successfully retrieved profile information.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    $ref: "#/components/schemas/ProfileVerificationStatus"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/domain:
-    put:
-      tags:
-        - Profiles
-      summary: Update Domain
-      description: Modify custom domain. (Business Only)
-      requestBody:
-        description: The details required to setup your domain.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PutBusinessDomainRequest"
-      responses:
-        "200":
-          description: Successfully updated domain.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/identity:
-    put:
-      tags:
-        - Profiles
-      summary: Update Identity
-      description: Modify identity information. (Business Only)
-      requestBody:
-        description: The details required to update business identity.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PutBusinessIdentityRequest"
-      responses:
-        "200":
-          description: Successfully updated business identity.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/documents:
-    get:
-      tags:
-        - Profiles
-      summary: Get Documents
-      description: Fetch a list of uploaded documents.
-      responses:
-        "200":
-          description: Successfully retrieved the list of profile documents.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      documents:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/ProfileDocument"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
-  /profiles/owners:
-    get:
-      tags:
-        - Profiles
-      summary: Get Owners
-      description: Fetch a list of beneficial owners. (Business Only)
-      responses:
-        "200":
-          description: Successfully retrieved the list of beneficial owners.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      owners:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/BusinessOwner"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    post:
-      tags:
-        - Profiles
-      summary: Add Owner
-      description: Add a new beneficial owner. (Business Only)
-      requestBody:
-        description: The details required to add a beneficial owner to your business profile.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostBusinessOwnerRequest"
-      responses:
-        "200":
-          description: Successfully created beneficial owner.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/owners/{owner_id}:
-    put:
-      tags:
-        - Profiles
-      summary: Update Owner
-      description: Modify benficial owner information. (Business Only)
-      parameters:
-        - name: owner_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Owner ID.
-            pattern: "^bow_.*$"
-      requestBody:
-        description: The details required to update the beneficial owner.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PutBusinessOwnerRequest"
-      responses:
-        "200":
-          description: Successfully updated beneficial owner.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    delete:
-      tags:
-        - Profiles
-      summary: Remove Owner
-      description: Remove a beneficial owner. (Business Only)
-      parameters:
-        - name: owner_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Owner ID.
-            pattern: "^bow_.*$"
-      responses:
-        "200":
-          description: Successfully removed beneficial owner from profile.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
-  /profiles/members:
-    get:
-      tags:
-        - Members
-      summary: Get Members
-      description: Fetch a list of members. (Business Only)
-      responses:
-        "200":
-          description: Successfully retrieved the list of members.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      members:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/BusinessMember"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    post:
-      tags:
-        - Members
-      summary: Invite Member
-      description: Invite a member to your profile. (Business Only)
-      requestBody:
-        description: The details required to invite a member to your business profile.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostBusinessMemberRequest"
-      responses:
-        "200":
-          description: Successfully invited member.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/members/{member_id}:
-    get:
-      tags:
-        - Members
-      summary: Get Member
-      description: Fetch member information. (Business Only)
-      parameters:
-        - name: member_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Member ID.
-            pattern: "^tem_.*$"
-      responses:
-        "200":
-          description: Successfully retrieved the member details.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    $ref: "#/components/schemas/BusinessMember"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    put:
-      tags:
-        - Members
-      summary: Update Member
-      description: Modify member information. (Business Only)
-      parameters:
-        - name: member_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Member ID.
-            pattern: "^tem_.*$"
-      requestBody:
-        description: The details required to update the team member.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PutBusinessMemberRequest"
-      responses:
-        "200":
-          description: Successfully updated team member.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    delete:
-      tags:
-        - Members
-      summary: Remove Member
-      description: Remove a member from your profile. (Business Only)
-      parameters:
-        - name: member_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Member ID.
-            pattern: "^tem_.*$"
-      responses:
-        "200":
-          description: Successfully removed team member.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
-  /profiles/addresses:
-    get:
-      tags:
-        - Profiles
-      summary: Get Addresses
-      description: Fetch a list of registered addresses.
-      responses:
-        "200":
-          description: Successfully retrieved the list of profile addresses.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      addresses:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/ProfileAddress"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    post:
-      tags:
-        - Profiles
-      summary: Add Address
-      description: Add a new address.
-      requestBody:
-        description: The details required to create a profile address.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostProfileAddressRequest"
-      responses:
-        "200":
-          description: Successfully created profile address.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /profiles/addresses/{address_id}:
-    put:
-      tags:
-        - Profiles
-      summary: Update Address
-      description: Modify address information.
-      parameters:
-        - name: address_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Address ID.
-            pattern: "^adr_.*$"
-      requestBody:
-        description: The details required to update the profile address.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PutProfileAddressRequest"
-      responses:
-        "200":
-          description: Successfully updated profile address.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    delete:
-      tags:
-        - Profiles
-      summary: Remove Address
-      description: Remove an address. (Only available on `unverified` addresses)
-      parameters:
-        - name: address_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The Address ID.
-            pattern: "^adr_.*$"
-      responses:
-        "200":
-          description: Successfully removed profile address.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
   /access-tokens:
     get:
       tags:
@@ -1872,16 +1197,18 @@ paths:
           schema:
             type: string
             description: The ID of the balance you want to filter based on.
+            pattern: "^(ica_|bca_).*"
         - name: status
           in: query
           required: false
           schema:
             type: string
             enum:
-              - pending
               - processing
               - settled
               - requires-approval
+              - declined
+              - failed
               - cancelled
             description: The status of the transactions you want to filter based on.
         - name: type
@@ -1905,6 +1232,14 @@ paths:
               - Payout
               - EcomPay
             description: The method of the transactions you want to filter based on.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of transactions to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of wallet transactions.
@@ -2002,6 +1337,19 @@ paths:
             type: string
             description: The Wallet ID.
             pattern: "^(buw_|inw_).*"
+        - name: type
+          in: query
+          required: false
+          schema:
+            description: The type of balances you want to filter based on.
+            $ref: "#/components/schemas/WalletBalanceType"
+        - name: currency
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The currency you want to filter based on.
+            pattern: ^[A-Z]{3}$
       responses:
         "200":
           description: Successfully retrieved the list of wallet balances.
@@ -2818,7 +2166,6 @@ paths:
               - peer
               - move
               - bank
-              - batch
             description: The Transfer Method.
       requestBody:
         description: The details required to initiate the transfer.
@@ -2828,18 +2175,47 @@ paths:
             schema:
               oneOf:
                 - $ref: "#/components/schemas/PostPeerTransferRequest"
-                - $ref: "#/components/schemas/PostBankTransferRequest"
                 - $ref: "#/components/schemas/PostMoveTransferRequest"
-                - $ref: "#/components/schemas/PostBatchTransferRequest"
+                - $ref: "#/components/schemas/PostBankTransferRequest"
       responses:
         "200":
           description: Successfully initiated transfer.
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/TransferResponse"
-                  - $ref: "#/components/schemas/TransferBatchResponse"
+                $ref: "#/components/schemas/TransferResponse"
+        "4XX":
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "5XX":
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /transfers/initiate/batch:
+    post:
+      tags:
+        - Transfers
+      summary: Batch Transfer
+      description: Start a batch transfer operation.
+      requestBody:
+        description: The details required to initiate the transfers.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostBatchTransferRequest"
+      responses:
+        "200":
+          description: Successfully initiated transfers.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferBatchResponse"
         "4XX":
           description: Client error.
           content:
@@ -2938,8 +2314,9 @@ paths:
     get:
       tags:
         - Customers
+        - Business
       summary: Get Customers
-      description: Fetch a list of customers. (Business Only)
+      description: Fetch a list of customers.
       responses:
         "200":
           description: Successfully retrieved the list of customers.
@@ -2973,8 +2350,9 @@ paths:
     post:
       tags:
         - Customers
+        - Business
       summary: Add Customer
-      description: Add a new customer. (Business Only)
+      description: Add a new customer.
       requestBody:
         description: The details required to create a customer.
         required: true
@@ -3005,8 +2383,9 @@ paths:
     get:
       tags:
         - Customers
+        - Business
       summary: Get Customer
-      description: Fetch customer information. (Business Only)
+      description: Fetch customer information.
       parameters:
         - name: customer_id
           in: path
@@ -3043,8 +2422,9 @@ paths:
     put:
       tags:
         - Customers
+        - Business
       summary: Update Customer
-      description: Modify customer information. (Business Only)
+      description: Modify customer information.
       parameters:
         - name: customer_id
           in: path
@@ -3082,8 +2462,9 @@ paths:
     patch:
       tags:
         - Customers
+        - Business
       summary: Restore Customer
-      description: Restore an archived customer. (Business Only)
+      description: Restore an archived customer.
       parameters:
         - name: customer_id
           in: path
@@ -3114,8 +2495,9 @@ paths:
     delete:
       tags:
         - Customers
+        - Business
       summary: Remove Customer
-      description: Permanently remove / archive a customer. (Business Only)
+      description: Permanently remove / archive a customer.
       parameters:
         - name: customer_id
           in: path
@@ -3148,8 +2530,9 @@ paths:
     get:
       tags:
         - Vouchers
+        - Business
       summary: Get Vouchers
-      description: Fetch a list of vouchers. (Business Only)
+      description: Fetch a list of vouchers.
       responses:
         "200":
           description: Successfully retrieved the list of vouchers.
@@ -3183,6 +2566,7 @@ paths:
     post:
       tags:
         - Vouchers
+        - Business
       summary: Create Voucher
       description: Create a new voucher.
       requestBody:
@@ -3215,8 +2599,9 @@ paths:
     post:
       tags:
         - Vouchers
+        - Business
       summary: Apply Voucher
-      description: Apply a voucher to an eligible invoice. (Business Only)
+      description: Apply a voucher to an eligible invoice.
       requestBody:
         description: The details required to apply a voucher to an invoice.
         required: true
@@ -3247,8 +2632,9 @@ paths:
     get:
       tags:
         - Vouchers
+        - Business
       summary: Get Voucher
-      description: Fetch voucher information. (Business Only)
+      description: Fetch voucher information.
       parameters:
         - name: voucher_id
           in: path
@@ -3285,8 +2671,9 @@ paths:
     put:
       tags:
         - Vouchers
+        - Business
       summary: Update Voucher
-      description: Modify voucher information. (Business Only)
+      description: Modify voucher information.
       parameters:
         - name: voucher_id
           in: path
@@ -3324,8 +2711,9 @@ paths:
     delete:
       tags:
         - Vouchers
+        - Business
       summary: Remove Voucher
-      description: Permanently delete a voucher. (Business Only)
+      description: Permanently delete a voucher.
       parameters:
         - name: voucher_id
           in: path
@@ -3358,8 +2746,40 @@ paths:
     get:
       tags:
         - Plans
+        - Business
       summary: Get Plans
-      description: Fetch a list of plans. (Business Only)
+      description: Fetch a list of plans.
+      parameters:
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The type you want to filter based on.
+            enum:
+              - standard
+              - metered
+        - name: currency
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The currency you want to filter based on.
+            pattern: ^[A-Z]{3}$
+        - name: active
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: The state of options you want to filter based on.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of plans to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of plans.
@@ -3393,6 +2813,7 @@ paths:
     post:
       tags:
         - Plans
+        - Business
       summary: Create Plan
       description: Create a new plan.
       requestBody:
@@ -3425,8 +2846,9 @@ paths:
     get:
       tags:
         - Plans
+        - Business
       summary: Get Plan
-      description: Fetch plan information. (Business Only)
+      description: Fetch plan information.
       parameters:
         - name: plan_id
           in: path
@@ -3435,6 +2857,12 @@ paths:
             type: string
             description: The Plan ID.
             pattern: "^pln_.*$"
+        - name: active
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: The state of options you want to filter based on.
       responses:
         "200":
           description: Successfully retrieved plan details.
@@ -3463,8 +2891,9 @@ paths:
     put:
       tags:
         - Plans
+        - Business
       summary: Update Plan
-      description: Modify plan information. (Business Only)
+      description: Modify plan information.
       parameters:
         - name: plan_id
           in: path
@@ -3502,8 +2931,9 @@ paths:
     delete:
       tags:
         - Plans
+        - Business
       summary: Remove Plan
-      description: Permanently delete a plan. (Business Only)
+      description: Permanently delete a plan.
       parameters:
         - name: plan_id
           in: path
@@ -3536,6 +2966,7 @@ paths:
     post:
       tags:
         - Plans
+        - Business
       summary: Add Price Option
       description: Add a new price option to a plan.
       parameters:
@@ -3576,6 +3007,7 @@ paths:
     put:
       tags:
         - Plans
+        - Business
       summary: Update Price Option
       description: Modify price option information.
       parameters:
@@ -3622,6 +3054,7 @@ paths:
     patch:
       tags:
         - Plans
+        - Business
       summary: Modify Price Option
       description: Activate or deactivate a price option.
       parameters:
@@ -3661,6 +3094,7 @@ paths:
     delete:
       tags:
         - Plans
+        - Business
       summary: Remove Price Option
       description: Remove a price option from a plan.
       parameters:
@@ -3702,8 +3136,9 @@ paths:
     get:
       tags:
         - Invoices
+        - Business
       summary: Get Invoices
-      description: Fetch a list of invoices. (Business Only)
+      description: Fetch a list of invoices.
       parameters:
         - name: resource_id
           in: query
@@ -3724,6 +3159,14 @@ paths:
           schema:
             description: The status you want to filter based on.
             $ref: "#/components/schemas/InvoiceStatus"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of invoices to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of invoices.
@@ -3757,8 +3200,9 @@ paths:
     post:
       tags:
         - Invoices
+        - Business
       summary: Create Invoice
-      description: Create a new invoice. (Business Only)
+      description: Create a new invoice.
       requestBody:
         description: The details required to create an invoice.
         required: true
@@ -3789,8 +3233,9 @@ paths:
     get:
       tags:
         - Invoices
+        - Business
       summary: Get Invoice
-      description: Fetch invoice information. (Business Only)
+      description: Fetch invoice information.
       parameters:
         - name: invoice_id
           in: path
@@ -3827,8 +3272,9 @@ paths:
     put:
       tags:
         - Invoices
+        - Business
       summary: Update Invoice
-      description: Update invoice information. (Business Only)
+      description: Update invoice information.
       parameters:
         - name: invoice_id
           in: path
@@ -3866,8 +3312,9 @@ paths:
     delete:
       tags:
         - Invoices
+        - Business
       summary: Remove Invoice
-      description: Permanently delete an invoice. (Business Only)
+      description: Permanently delete an invoice.
       parameters:
         - name: invoice_id
           in: path
@@ -3899,6 +3346,7 @@ paths:
     post:
       tags:
         - Invoices
+        - Business
       summary: Send Invoice
       description: Send an e-invoice to the customer's email.
       parameters:
@@ -3933,6 +3381,7 @@ paths:
     post:
       tags:
         - Invoices
+        - Business
       summary: Add Line Items
       description: Add new line items to an invoice.
       parameters:
@@ -3973,6 +3422,7 @@ paths:
     put:
       tags:
         - Invoices
+        - Business
       summary: Update Line Item
       description: Modify line item information.
       parameters:
@@ -4019,6 +3469,7 @@ paths:
     delete:
       tags:
         - Invoices
+        - Business
       summary: Remove Line Item
       description: Remove a line item from an invoice.
       parameters:
@@ -4060,8 +3511,9 @@ paths:
     get:
       tags:
         - Subscriptions
+        - Business
       summary: Get Subscriptions
-      description: Fetch a list of subscriptions. (Business Only)
+      description: Fetch a list of subscriptions.
       parameters:
         - name: resource_id
           in: query
@@ -4082,6 +3534,14 @@ paths:
           schema:
             description: The status you want to filter based on.
             $ref: "#/components/schemas/SubscriptionStatus"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of subscriptions to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of subscriptions.
@@ -4115,8 +3575,9 @@ paths:
     post:
       tags:
         - Subscriptions
+        - Business
       summary: Create Subscription
-      description: Create a new subscription. (Business Only)
+      description: Create a new subscription.
       requestBody:
         description: The details required to create a subscription.
         required: true
@@ -4147,8 +3608,9 @@ paths:
     get:
       tags:
         - Subscriptions
+        - Business
       summary: Get Subscription
-      description: Fetch subscription information. (Business Only)
+      description: Fetch subscription information.
       parameters:
         - name: subscription_id
           in: path
@@ -4185,8 +3647,9 @@ paths:
     patch:
       tags:
         - Subscriptions
+        - Business
       summary: Update Subscription
-      description: Enable or Disable subscription auto renewal. (Business Only)
+      description: Enable or Disable subscription auto renewal.
       parameters:
         - name: subscription_id
           in: path
@@ -4217,8 +3680,9 @@ paths:
     delete:
       tags:
         - Subscriptions
+        - Business
       summary: Remove Subscription
-      description: Permanently delete a subscription. (Business Only)
+      description: Permanently delete a subscription.
       parameters:
         - name: subscription_id
           in: path
@@ -4250,8 +3714,9 @@ paths:
     post:
       tags:
         - Subscriptions
+        - Business
       summary: Restore Subscription
-      description: Restore a subscription that's in a `requires-action` state. (Business Only)
+      description: Restore a subscription that's in a `requires-action` state.
       parameters:
         - name: subscription_id
           in: path
@@ -4283,8 +3748,9 @@ paths:
     post:
       tags:
         - Subscriptions
+        - Business
       summary: Cancel Subscription
-      description: Cancel a subscription that's in a `active` or `trial` state. (Business Only)
+      description: Cancel a subscription that's in a `active` or `trial` state.
       parameters:
         - name: subscription_id
           in: path
@@ -4317,16 +3783,16 @@ paths:
     get:
       tags:
         - Payments
+        - Business
       summary: Get Payments
-      description: Fetch a list payments. (Business Only)
+      description: Fetch a list payments.
       parameters:
-        - name: invoice_id
+        - name: resource_id
           in: query
           required: false
           schema:
             type: string
-            description: The ID of the invoice you want to filter based on.
-            pattern: "^inv_.*$"
+            description: The ID of the resource you want to filter based on (e.g. Invoice).
         - name: currency
           in: query
           required: false
@@ -4340,6 +3806,20 @@ paths:
           schema:
             description: The status you want to filter based on.
             $ref: "#/components/schemas/PaymentStatus"
+        - name: method
+          in: query
+          required: false
+          schema:
+            description: The method you want to filter based on.
+            $ref: "#/components/schemas/PaymentSourceType"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of payments to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of payments.
@@ -4374,6 +3854,7 @@ paths:
     post:
       tags:
         - Payments
+        - Business
       summary: Initiate Payment
       description: Start a payment operation.
       parameters:
@@ -4427,6 +3908,7 @@ paths:
     get:
       tags:
         - Payments
+        - Business
       summary: Get Payment
       description: Fetch payment information.
       parameters:
@@ -4466,6 +3948,7 @@ paths:
     post:
       tags:
         - Payments
+        - Business
       summary: Refund Payment
       description: Refund an approved payment.
       parameters:
@@ -4507,8 +3990,9 @@ paths:
     get:
       tags:
         - Provider Connections
+        - Business
       summary: Get Provider Connections
-      description: Fetch a list of connected providers. (Business Only)
+      description: Fetch a list of connected providers.
       responses:
         "200":
           description: Successfully retrieved the list of providers.
@@ -4542,8 +4026,9 @@ paths:
     post:
       tags:
         - Provider Connections
+        - Business
       summary: Connect Provider
-      description: Connect a new provider. (Business Only)
+      description: Connect a new provider.
       requestBody:
         description: The details required to connect a provider.
         required: true
@@ -4574,8 +4059,9 @@ paths:
     put:
       tags:
         - Provider Connections
+        - Business
       summary: Update Provider Connection
-      description: Update connection API credentials. (Business Only)
+      description: Update connection API credentials.
       parameters:
         - name: connection_id
           in: path
@@ -4613,8 +4099,9 @@ paths:
     patch:
       tags:
         - Provider Connections
+        - Business
       summary: Modify Provider Connection
-      description: Enable or disable a provider connection. (Business Only)
+      description: Enable or disable a provider connection.
       parameters:
         - name: connection_id
           in: path
@@ -4645,8 +4132,9 @@ paths:
     delete:
       tags:
         - Provider Connections
+        - Business
       summary: Remove Provider Connection
-      description: Permanently disconnect a provider. (Business Only)
+      description: Permanently disconnect a provider.
       parameters:
         - name: connection_id
           in: path
@@ -4679,8 +4167,9 @@ paths:
     get:
       tags:
         - Analytics
+        - Business
       summary: Get Invoice Metrics
-      description: Fetch invoice metrics. (Business Only)
+      description: Fetch invoice metrics.
       responses:
         "200":
           description: Successfully retrieved invoice metrics.
@@ -4710,8 +4199,9 @@ paths:
     get:
       tags:
         - Analytics
+        - Business
       summary: Get Subscription Metrics
-      description: Fetch subscription metrics. (Business Only)
+      description: Fetch subscription metrics.
       responses:
         "200":
           description: Successfully retrieved subscription metrics.
@@ -4741,8 +4231,9 @@ paths:
     get:
       tags:
         - Analytics
+        - Business
       summary: Get Payment Metrics
-      description: Fetch payment metrics. (Business Only)
+      description: Fetch payment metrics.
       responses:
         "200":
           description: Successfully retrieved payment metrics.
@@ -4772,8 +4263,9 @@ paths:
     get:
       tags:
         - Analytics
+        - Business
       summary: Get Customer Metrics
-      description: Fetch the customer metrics. (Business Only)
+      description: Fetch the customer metrics.
       responses:
         "200":
           description: Successfully retrieved customer metrics.
@@ -4800,7 +4292,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /audits/logs:
+  /logs:
     get:
       tags:
         - Logs
@@ -4832,8 +4324,16 @@ paths:
             type: string
             enum:
               - token
-              - member
+              - user
             description: The authentication flow to filter based on.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+            description: The number of logs to return in the response.
+            minimum: 1
+            maximum: 1000
       responses:
         "200":
           description: Successfully retrieved the list of logs.
@@ -4865,300 +4365,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /banks:
-    get:
-      tags:
-        - Resources
-      summary: Get Banks
-      description: Fetch a list of supported banks.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported banks.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      banks:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/BankResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /scopes:
-    get:
-      tags:
-        - Resources
-      summary: Get Scopes
-      description: Fetch a list of supported access token scopes.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported token scopes.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      scopes:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PublicResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /events:
-    get:
-      tags:
-        - Resources
-      summary: Get Events
-      description: Fetch a list of supported webhook event types.
-      responses:
-        "200":
-          description: Successfully retrieved the list of webhook event types.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      events:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PublicResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /countries:
-    get:
-      tags:
-        - Resources
-      summary: Get Countries
-      description: Fetch a list of supported countries.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported countries.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      countries:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/CountryResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /currencies:
-    get:
-      tags:
-        - Resources
-      summary: Get Currencies
-      description: Fetch a list of supported currencies.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported currencies.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      currencies:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/CurrencyResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /industries:
-    get:
-      tags:
-        - Resources
-      summary: Get Industries
-      description: Fetch a list of supported business industries.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported industries.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      industries:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PublicResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /legal-forms:
-    get:
-      tags:
-        - Resources
-      summary: Get Legal Forms
-      description: Fetch a list of supported business legal forms.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported legal forms.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      legal_forms:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PublicResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /payment-providers:
-    get:
-      tags:
-        - Resources
-      summary: Get Payment Providers
-      description: Fetch a list of supported business payment providers.
-      responses:
-        "200":
-          description: Successfully retrieved the list of supported payment providers.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  data:
-                    type: object
-                    properties:
-                      payment_providers:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/PaymentProviderResource"
-        "4XX":
-          description: Client error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "5XX":
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
   schemas:
+    # Responses
     BaseResponse:
       type: object
       properties:
@@ -5355,63 +4569,51 @@ components:
               description: The session expiration time.
 
     # Enums
-    ProfileStatus:
-      type: string
-      enum:
-        - unverified
-        - pending
-        - verified
-        - limited
-        - denied
-      example: "verified"
-
-    BusinessOwnerType:
-      type: string
-      enum:
-        - individual
-        - business
-        - non-profit
-      example: "individual"
-      description: The type of owner.
-    BusinessOwnerRole:
-      type: string
-      enum:
-        - shareholder
-        - director
-      example: "shareholder"
-      description: The role of involvment in the business.
-
-    BusinessMemberRole:
-      type: string
-      enum:
-        - admin
-        - manager
-        - operator
-        - developer
-      example: "admin"
-      description: The role of access to profile related resources.
-
     WalletType:
       type: string
       enum:
         - fiat
         - crypto
-      example: "fiat"
+      example: fiat
       description: Type of wallet.
+    WalletIconType:
+      type: string
+      enum:
+        - bitcoin
+        - blend
+        - dollar-sign
+        - flame
+        - gem
+        - headset
+        - heart
+        - infinity
+        - landmark
+        - leaf
+        - piggy-bank
+        - pyramid
+        - snowflake
+        - sparkles
+        - tree-palm
+        - trophy
+        - vault
+        - wallet
+        - zap
+      example: wallet
+      description: Custom icon of the wallet
     WalletBalanceType:
       type: string
       enum:
         - primary
         - saving
         - investment
-      example: "primary"
+      example: primary
       description: Type of balance.
     WalletAccountType:
       type: string
       enum:
         - checking
         - saving
-      example: "checking"
+      example: checking
       description: Type of account.
 
     RateType:
@@ -5419,7 +4621,56 @@ components:
       enum:
         - percentage
         - fixed
-      example: "percentage"
+      example: percentage
+      description: The applicable rate type.
+    CurrencyType:
+      type: string
+      enum:
+        - SRD
+        - USD
+        - EUR
+      example: SRD
+      description: Currency code in ISO 4217 format.
+    CountryType:
+      type: string
+      enum:
+        - AG
+        - AW
+        - BS
+        - BB
+        - BM
+        - CW
+        - DM
+        - GD
+        - GY
+        - JM
+        - KN
+        - LC
+        - VC
+        - SR
+        - TT
+      example: SR
+      description: Currency code in ISO 3166-1 alpha-2 format.
+    BankSwiftType:
+      type: string
+      enum:
+        - SURBSRPA
+        - FBNASRPA
+        - GODOSRPA
+        - HAKRSRPA
+        - RBNKSRPA
+        - SOUOSRPP
+      example: SOUOSRPP
+      description: Swift Code / BIC of the bank.
+    PaymentProviderType:
+      type: string
+      enum:
+        - pcb
+        - pbb
+        - card
+        - uni5pay
+      example: card
+      description: Unique slug for the provider.
 
     InvoiceStatus:
       type: string
@@ -5436,7 +4687,7 @@ components:
         - expired
         - trial
         - active
-        - requires-action
+        - suspended
         - cancelled
       example: "active"
 
@@ -5444,6 +4695,7 @@ components:
       type: string
       enum:
         - pending
+        - failed
         - approved
         - settled
         - refunded
@@ -5452,12 +4704,14 @@ components:
     PaymentSourceType:
       type: string
       enum:
-        - platform
+        - wallet
         - qr
         - card
         - bank
         - other
-      example: "platform"
+      example: "wallet"
+
+    # Data Schemas
     PaymentMetricStatusSummary:
       type: object
       properties:
@@ -5472,367 +4726,6 @@ components:
               type: string
             total:
               type: number
-
-    # Data Schemas
-    CountryResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Suriname
-        code:
-          type: number
-          example: 740
-        currency:
-          type: string
-          example: SRD
-        dail_code:
-          type: number
-          example: 597
-        alpha_2:
-          type: string
-          example: SR
-        alpha_3:
-          type: string
-          example: SUR
-    CurrencyResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Surinamese Dollar
-        code:
-          type: string
-          example: SRD
-        alt_code:
-          type: number
-          example: 968
-        symbol:
-          type: string
-          example: $
-    BankResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: De Surinaamsche Bank
-        swift:
-          type: string
-          example: SURBSRPA
-        slug:
-          type: string
-          example: DSB
-    PaymentProviderResource:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Paisr Pay
-        description:
-          type: string
-          example: A fast and secure way to pay in the Caribbean.
-        slug:
-          type: string
-          example: pcb
-        logo:
-          type: string
-          example: https://paisr.tech/favicon.ico
-        type:
-          type: string
-          example: wallet
-        available:
-          type: boolean
-          example: true
-        built_in:
-          type: boolean
-          example: true
-        supported_currencies:
-          type: array
-          example: ["SRD", "USD", "EUR"]
-    PublicResource:
-      type: object
-      properties:
-        description:
-          type: string
-        slug:
-          type: string
-
-    PersonalProfile:
-      title: Personal
-      type: object
-      properties:
-        id:
-          type: string
-          example: idv_123456
-        given_name:
-          type: string
-          example: John
-        middle_name:
-          type: string
-          example: Jacob
-        last_name:
-          type: string
-          example: Smith
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-          example: "+597-8123456"
-        identity:
-          type: object
-          properties:
-            country:
-              type: string
-              example: SR
-            status:
-              $ref: "#/components/schemas/ProfileStatus"
-            gender:
-              type: string
-              enum:
-                - male
-                - female
-                - private
-            date_of_birth:
-              type: string
-              example: 1996-12-12
-            id_number:
-              type: string
-              example: XX123456
-            approved:
-              type: boolean
-              example: true
-            approved_at:
-              type: string
-              format: date-time
-        created_at:
-          type: string
-          format: date-time
-    BusinessProfile:
-      title: Business
-      type: object
-      properties:
-        id:
-          type: string
-          example: bus_123456
-        owner:
-          type: string
-          example: abc123456
-        legal_name:
-          type: string
-          example: Acme Incorporation
-        public_name:
-          type: string
-          example: Acme
-        type:
-          type: string
-          enum:
-            - free
-            - pro
-            - enterprise
-        avatar:
-          type: string
-        slogan:
-          type: string
-          example: My example slogan
-        about:
-          type: string
-          example: We are a company focussed on providing value to customers.
-        contact:
-          type: object
-          properties:
-            email:
-              type: string
-              format: email
-              example: hello@acme.com
-            phone:
-              type: string
-              example: "+597-412345"
-            website:
-              type: string
-              format: url
-              example: https://acme.com
-        attributes:
-          type: object
-          properties:
-            industry:
-              type: string
-              example: technology
-            target_market:
-              type: array
-              enum:
-                - B2B
-                - B2C
-                - B2G
-              example: ["B2B", "B2C"]
-            target_audience:
-              type: array
-              enum:
-                - Local
-                - Regional
-                - Global
-              example: ["Local", "Regional"]
-        identity:
-          type: object
-          properties:
-            country:
-              type: string
-              example: SR
-            status:
-              $ref: "#/components/schemas/ProfileStatus"
-            incorporated:
-              type: boolean
-              example: true
-            date_of_incorporation:
-              type: string
-              example: "2022-10-12"
-            legal_form:
-              type: string
-              example: for-profit-corporation
-            commerce_number:
-              type: string
-              example: XX123456
-            tax_number:
-              type: string
-              example: XX123456
-            approved:
-              type: boolean
-              example: true
-            approved_at:
-              type: string
-              format: date-time
-        theme:
-          type: object
-          properties:
-            primary:
-              type: string
-              example: "#6A66F2"
-            accent:
-              type: string
-              example: "#E6E6FF"
-        domain:
-          type: object
-          properties:
-            host:
-              type: string
-            cname:
-              type: string
-            txt:
-              type: string
-            status:
-              type: string
-              enum:
-                - unset
-                - pending
-                - active
-                - requires-action
-        created_at:
-          type: string
-          format: date-time
-    ProfileAddress:
-      type: object
-      properties:
-        id:
-          type: string
-          example: adr_123456
-        address_line_1:
-          type: string
-          example: Example Street 10
-        address_line_2:
-          type: string
-          example: Example Street 11
-        address_line_3:
-          type: string
-          example: Example Street 12
-        city:
-          type: string
-          example: Paramaribo
-        state:
-          type: string
-          example: Kwatta
-        verified:
-          type: boolean
-    ProfileDocument:
-      type: object
-      properties:
-        id:
-          type: string
-          example: doc_123456
-        description:
-          type: string
-          example: Government ID
-        verified:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-    ProfileVerificationStatus:
-      type: object
-      properties:
-        id:
-          type: string
-          example: bus_123456
-        status:
-          $ref: "#/components/schemas/ProfileStatus"
-        country:
-          type: string
-          example: SR
-        approved:
-          type: boolean
-        approved_at:
-          type: string
-          format: date-time
-    BusinessOwner:
-      type: object
-      properties:
-        id:
-          type: string
-          example: bow_123456
-        full_name:
-          type: string
-          example: Jane Smith
-        email:
-          type: string
-          format: email
-        type:
-          $ref: "#/components/schemas/BusinessOwnerType"
-        role:
-          $ref: "#/components/schemas/BusinessOwnerRole"
-        status:
-          type: string
-          enum:
-            - pending
-            - verified
-            - denied
-            - removed
-          example: verified
-        created_at:
-          type: string
-          format: date-time
-    BusinessMember:
-      type: object
-      properties:
-        id:
-          type: string
-          example: tem_123456
-        email:
-          type: string
-          format: email
-        role:
-          $ref: "#/components/schemas/BusinessMemberRole"
-        status:
-          type: string
-          enum:
-            - invited
-            - accepted
-            - removed
-          example: accepted
-        created_at:
-          type: string
-          format: date-time
-        accepted_at:
-          type: string
-          format: date-time
 
     AuditLog:
       type: object
@@ -5871,7 +4764,6 @@ components:
               enum:
                 - token
                 - user
-                - member
               example: token
             uuid:
               type: string
@@ -6102,8 +4994,7 @@ components:
           type: object
           properties:
             code:
-              type: string
-              example: SRD
+              $ref: "#/components/schemas/CurrencyType"
             symbol:
               type: string
               example: $
@@ -6113,7 +5004,7 @@ components:
             running:
               type: number
               format: float
-              example: 750170.75
+              example: 2802.75
             holding:
               type: number
               format: float
@@ -6123,6 +5014,27 @@ components:
           example: false
         type:
           $ref: "#/components/schemas/WalletBalanceType"
+        treasurer:
+          type: object
+          default: {}
+          properties:
+            name:
+              type: string
+              example: PAISR Treasury
+            iban:
+              type: string
+              example: ABC123456789
+            type:
+              type: string
+              example: checking
+            bank:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Southern Commercial Bank
+                swift:
+                  $ref: "#/components/schemas/BankSwiftType"
         created_at:
           type: string
           format: date-time
@@ -6141,8 +5053,7 @@ components:
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         verified:
           type: boolean
         bank:
@@ -6150,10 +5061,9 @@ components:
           properties:
             name:
               type: string
-              example: De Surinaamsche Bank
+              example: Southern Commercial Bank
             swift_code:
-              type: string
-              example: SURBSRPA
+              $ref: "#/components/schemas/BankSwiftType"
         created_at:
           type: string
           format: date-time
@@ -6174,6 +5084,7 @@ components:
           example: janesmith
         avatar:
           type: string
+          example: https://gravatar.com/avatars/uhofasobobao
         created_at:
           type: string
           format: date-time
@@ -6187,8 +5098,7 @@ components:
           type: string
           example: Plant a tree initiative
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         amount:
           type: number
           format: float
@@ -6295,6 +5205,12 @@ components:
         reference:
           type: string
           example: "Payment for Invoice #199027"
+        balance_before:
+          type: number
+          example: 75.00
+        balance_after:
+          type: number
+          example: 50.00
         created_at:
           type: string
           format: date-time
@@ -6441,6 +5357,12 @@ components:
         reference:
           type: string
           example: For services renderred
+        balance_before:
+          type: number
+          example: 75.00
+        balance_after:
+          type: number
+          example: 50.00
         created_at:
           type: string
           format: date-time
@@ -6489,9 +5411,15 @@ components:
                   type: string
         reference:
           type: string
+        balance_before:
+          type: number
+          example: 0.00
+        balance_after:
+          type: number
+          example: 75.00
         created_at:
           type: string
-          format: datte-time
+          format: date-time
         processed_at:
           type: string
           format: date-time
@@ -6512,8 +5440,7 @@ components:
           type: string
           example: "+597-8123456"
         default_currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         billing_details:
           default: null
           $ref: "#/components/schemas/CustomerBillingDetails"
@@ -6701,8 +5628,7 @@ components:
           default: standard
           example: standard
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         created_at:
           type: string
           format: date-time
@@ -6732,6 +5658,9 @@ components:
         trial_period:
           type: number
           example: 0
+        subscribers:
+          type: number
+          example: 10
         attributes:
           type: object
         created_at:
@@ -6814,8 +5743,7 @@ components:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         session:
           type: object
           properties:
@@ -6884,8 +5812,7 @@ components:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         session:
           type: object
           properties:
@@ -6972,8 +5899,7 @@ components:
         status:
           $ref: "#/components/schemas/SubscriptionStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         auto_renew:
           type: boolean
           example: true
@@ -7016,8 +5942,7 @@ components:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         auto_renew:
           type: boolean
           example: true
@@ -7116,8 +6041,7 @@ components:
           type: string
           example: "Payment for Invoice #600783"
         currency:
-          type: string
-          example: SRD
+          $ref: "#/components/schemas/CurrencyType"
         status:
           $ref: "#/components/schemas/PaymentStatus"
         payment_method:
@@ -7276,8 +6200,7 @@ components:
                 - disabled
               example: enabled
             slug:
-              type: string
-              example: pcb
+              $ref: "#/components/schemas/PaymentProviderType"
             available:
               type: boolean
               example: true
@@ -7322,7 +6245,7 @@ components:
         trial:
           type: number
           example: 5
-        requires_action:
+        suspended:
           type: number
           example: 3
         expired:
@@ -7343,6 +6266,8 @@ components:
           $ref: "#/components/schemas/PaymentMetricStatusSummary"
         settled:
           $ref: "#/components/schemas/PaymentMetricStatusSummary"
+        failed:
+          $ref: "#/components/schemas/PaymentMetricStatusSummary"
         cancelled:
           $ref: "#/components/schemas/PaymentMetricStatusSummary"
         refunded:
@@ -7355,339 +6280,6 @@ components:
           example: 24
 
     # Request Schemas
-    PutPersonalProfileRequest:
-      title: Personal
-      type: object
-      properties:
-        given_name:
-          type: string
-          description: First name as it appears on your ID document.
-          example: John
-          pattern: ^[a-zA-Z0-9 ]{2,72}$
-        middle_name:
-          type: string
-          description: Middle name(s) as it appears on your ID document.
-          example: Jacob
-          pattern: ^[a-zA-Z0-9 ]{2,72}$
-        last_name:
-          type: string
-          description: Last name(s) as it appears on your ID document.
-          example: Smith
-          pattern: ^[a-zA-Z0-9 ]{2,72}$
-        gender:
-          type: string
-          enum:
-            - male
-            - female
-            - other
-          description: Gender as it appears on your ID document.
-          example: male
-        date_of_birth:
-          type: string
-          description: Date of birth as it appears on your ID document. Accepted format (yyyy-mm-dd).
-          example: "1998-12-09"
-          pattern: ^\d{4}-\d{2}-\d{2}$
-        id_number:
-          type: string
-          description: Government ID number on your ID document.
-          example: XX123456
-          pattern: ^[A-Z0-9]{4,32}$
-        phone:
-          type: string
-          description: Phone number without the dailcode.
-          example: "8123456"
-          pattern: ^[0-9]{4,14}$
-        country:
-          type: string
-          description: Registered country in ISO Alpha2 format.
-          example: SR
-          pattern: ^[A-Z]{2}$
-    PutBusinessProfileRequest:
-      title: Business
-      type: object
-      properties:
-        public_name:
-          type: string
-          description: Public or short business name.
-          example: Acme
-          pattern: ^[\w\s.,:;!?()-]{3,120}$
-        slogan:
-          type: string
-          description: Business slogan.
-          example: My example slogan
-          pattern: ^[\w\s.,:;!?()-]{6,120}$
-        about:
-          type: string
-          description: Detailed description about the business.
-          example: We are a company focussed on providing value to customers.
-          pattern: ^[\w\s.,:;!?()-]{24,255}$
-        email:
-          type: string
-          format: email
-          description: Support email address.
-          example: hello@acme.com
-        phone:
-          type: string
-          description: Support phone number.
-          example: "412345"
-          pattern: ^[0-9]{4,14}$
-        website:
-          type: string
-          format: url
-          description: Full website or social url.
-          example: https://acme.com
-        primary_color:
-          type: string
-          description: Brand primary color.
-          example: "#6A66F2"
-          pattern: ^#([0-9A-Fa-f]{6})$
-        accent_color:
-          type: string
-          description: Brand accent color.
-          example: "#E6E6FF"
-          pattern: ^#([0-9A-Fa-f]{6})$
-        target_market:
-          type: array
-          description: Target markets.
-          items:
-            type: string
-            enum:
-              - B2B
-              - B2C
-              - B2G
-          example: ["B2B", "B2C"]
-        target_audience:
-          type: array
-          description: Target audiences.
-          items:
-            type: string
-            enum:
-              - Local
-              - Regional
-              - Global
-          example: ["Local", "Regional"]
-
-    PutBusinessIdentityRequest:
-      type: object
-      properties:
-        legal_name:
-          type: string
-          description: Full business name as it appears on legal documents.
-          example: Acme Incorporation
-          pattern: ^[\w\s.,:;!?()-]{3,255}$
-        date_of_incorporation:
-          type: string
-          description: Date of incorporation as it appears on legal documents.
-          example: "2022-10-12"
-          pattern: ^\d{4}-\d{2}-\d{2}$
-        legal_form:
-          type: string
-          enum:
-            - limited
-            - partnership
-            - sole-trader
-            - trust
-            - limited-gaurantee
-            - limited-partnership
-            - limited-liability-partnership
-            - limited-liability-company
-            - general partnership
-            - sole-proprietorship
-            - private-limited-company
-            - public-limited-company
-            - for-profit-corporation
-            - non-profit-corporation
-          description: Legal structure as it appears on legal documents.
-          example: for-profit-corporation
-          pattern: ^[a-z-]+$
-        commerce_number:
-          type: string
-          description: Chamber of Commerce registration number.
-          example: XX123456
-          pattern: ^[A-Z0-9]{4,32}$
-        tax_number:
-          type: string
-          description: Tax / FIN number issued by local authority.
-          example: FN123456
-          pattern: ^[A-Z0-9]{4,32}$
-        industry:
-          type: string
-          enum:
-            - agroculture
-            - automotive
-            - aviation
-            - commerce
-            - communicationns
-            - construction
-            - consulting
-            - education
-            - energy
-            - finance
-            - food-beverage
-            - government
-            - health
-            - hospitality
-            - insurance
-            - import-export
-            - legal
-            - logistics
-            - manufacturing
-            - marketplace
-            - media
-            - mining
-            - oil-gas
-            - pharmaceuticals
-            - real-estate
-            - retail
-            - restaurant
-            - services
-            - software-as-a-service
-            - technology
-            - tranportation
-            - utilities
-          description: Industry as it appears on legal documents.
-          example: technology
-          pattern: ^[a-z-]+$
-        country:
-          type: string
-          description: Country of registration in ISO Alpha2 format.
-          example: SR
-          pattern: ^[A-Z]{2}$
-    PutBusinessDomainRequest:
-      type: object
-      required:
-        - host
-      properties:
-        host:
-          type: string
-          description: Top-level or subdomain.
-          example: example.com
-          pattern: ^([\w-]+\.)*[\w-]+\.[a-z]{2,}$
-
-    # Profile Addresses
-    PostProfileAddressRequest:
-      type: object
-      required:
-        - address_line_1
-        - city
-      properties:
-        address_line_1:
-          type: string
-          description: Registered address as it appears on documents or utility bills.
-          example: Example Street 10
-          pattern: ^[a-zA-Z0-9 ]+$
-        address_line_2:
-          type: string
-          description: Registered address as it appears on documents or utility bills.
-          example: Example Street 12
-          pattern: ^[a-zA-Z0-9 ]+$
-        address_line_3:
-          type: string
-          description: Registered address as it appears on documents or utility bills.
-          example: Example Street 14
-          pattern: ^[a-zA-Z0-9 ]+$
-        city:
-          type: string
-          description: Registered city as it appears on documents or utility bills.
-          example: Paramaribo
-          pattern: ^[a-zA-Z0-9 ]+$
-        state:
-          type: string
-          description: Registered state as it appears on documents or utility bills.
-          pattern: ^[a-zA-Z0-9 ]+$
-        apartment:
-          type: string
-          description: Registered apartment no as it appears on documents or utility bills.
-          pattern: ^[a-zA-Z0-9]{1,6}$
-    PutProfileAddressRequest:
-      type: object
-      properties:
-        address_line_1:
-          type: string
-          description: Registered address as it appears on documents or utility bills.
-          example: Example Street 10
-          pattern: ^[a-zA-Z0-9 ]+$
-        address_line_2:
-          type: string
-          description: Registered address as it appears on documents or utility bills.
-          example: Example Street 12
-          pattern: ^[a-zA-Z0-9 ]+$
-        address_line_3:
-          type: string
-          description: Registered address as it appears on documents or utility bills.
-          example: Example Street 14
-          pattern: ^[a-zA-Z0-9 ]+$
-        city:
-          type: string
-          description: Registered city as it appears on documents or utility bills.
-          example: Paramaribo
-          pattern: ^[a-zA-Z0-9 ]+$
-        state:
-          type: string
-          description: Registered state as it appears on documents or utility bills.
-          pattern: ^[a-zA-Z0-9 ]+$
-        apartment:
-          type: string
-          description: Registered apartment no as it appears on documents or utility bills.
-          pattern: ^[a-zA-Z0-9]{1,6}$
-
-    # Business Profile Owners
-    PostBusinessOwnerRequest:
-      type: object
-      required:
-        - full_name
-        - email
-        - type
-        - role
-      properties:
-        full_name:
-          type: string
-          description: Full legal name of the person or business.
-          example: Jane Smith
-          pattern: ^[a-zA-Z0-9 ]{2,255}$
-        email:
-          type: string
-          format: email
-          description: Official email address.
-        type:
-          $ref: "#/components/schemas/BusinessOwnerType"
-        role:
-          $ref: "#/components/schemas/BusinessOwnerRole"
-    PutBusinessOwnerRequest:
-      type: object
-      properties:
-        full_name:
-          type: string
-          description: Full legal name of the person or business.
-          example: Jane Smith
-          pattern: ^[a-zA-Z0-9 ]{2,255}$
-        type:
-          $ref: "#/components/schemas/BusinessOwnerType"
-        role:
-          $ref: "#/components/schemas/BusinessOwnerRole"
-
-    # Business Profile Members
-    PostBusinessMemberRequest:
-      type: object
-      required:
-        - email
-        - role
-      properties:
-        email:
-          type: string
-          format: email
-          description: Personal or business email address.
-        role:
-          $ref: "#/components/schemas/BusinessMemberRole"
-    PutBusinessMemberRequest:
-      type: object
-      required:
-        - role
-      properties:
-        role:
-          $ref: "#/components/schemas/BusinessMemberRole"
-
-    # Profile Tokens
     PostAccessTokenRequest:
       type: object
       required:
@@ -7706,7 +6298,6 @@ components:
           items:
             type: string
             example: invoices.read
-
     PutAccessTokenRequest:
       type: object
       required:
@@ -7789,29 +6380,7 @@ components:
           example: Acme Cash
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         icon:
-          type: string
-          enum:
-            - bitcoin
-            - blend
-            - dollar-sign
-            - flame
-            - gem
-            - headset
-            - heart
-            - infinity
-            - landmark
-            - leaf
-            - piggy-bank
-            - pyramid
-            - snowflake
-            - sparkles
-            - tree-palm
-            - trophy
-            - vault
-            - wallet
-            - zap
-          description: Custom icon slug.
-          example: vault
+          $ref: "#/components/schemas/WalletIconType"
     PatchWalletRequest:
       type: object
       properties:
@@ -7821,35 +6390,12 @@ components:
           example: Acme Cash
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         icon:
-          type: string
-          enum:
-            - bitcoin
-            - blend
-            - dollar-sign
-            - flame
-            - gem
-            - headset
-            - heart
-            - infinity
-            - landmark
-            - leaf
-            - piggy-bank
-            - pyramid
-            - snowflake
-            - sparkles
-            - tree-palm
-            - trophy
-            - vault
-            - wallet
-            - zap
-          description: Custom icon slug.
-          example: vault
+          $ref: "#/components/schemas/WalletIconType"
         email:
           type: string
           format: email
           description: Email address for email notifications. (Only available on business wallets)
           example: notifications@acme.com
-
     PutWalletRequest:
       type: object
       properties:
@@ -7881,10 +6427,7 @@ components:
           example: SRD Revenue
           pattern: ^[a-zA-Z0-9 ]{6,48}$
         currency:
-          type: string
-          description: Currency code in ISO 4217 format.
-          example: SRD
-          pattern: ^[A-Z]{3}$
+          $ref: "#/components/schemas/CurrencyType"
         type:
           $ref: "#/components/schemas/WalletBalanceType"
     PutWalletBalanceRequest:
@@ -7916,13 +6459,9 @@ components:
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
         swift_code:
-          type: string
-          description: Bank Swift/BIC.
+          $ref: "#/components/schemas/BankSwiftType"
         currency:
-          type: string
-          description: Currency code in ISO 4217 format.
-          minLength: 3
-          maxLength: 3
+          $ref: "#/components/schemas/CurrencyType"
     PatchWalletAccountRequest:
       type: object
       required:
@@ -8053,11 +6592,9 @@ components:
                 enum:
                   - peer
                   - bank
-                  - move
                 example: peer
               details:
                 oneOf:
-                  - $ref: "#/components/schemas/PostMoveTransferRequest"
                   - $ref: "#/components/schemas/PostPeerTransferRequest"
                   - $ref: "#/components/schemas/PostBankTransferRequest"
     PostApproveTransferRequest:
@@ -8095,8 +6632,8 @@ components:
           format: tel
           description: The phone number of the customer. (eg +597-8123456)
         default_currency:
-          type: string
           description: Default currency to apply on all new invoices of the customer.
+          $ref: "#/components/schemas/CurrencyType"
         billing_details:
           description: The billing details of the customer
           $ref: "#/components/schemas/CustomerBillingDetails"
@@ -8121,8 +6658,8 @@ components:
           format: tel
           description: The phone number of the customer. (eg +597-8123456)
         default_currency:
-          type: string
           description: Default currency to apply on all new invoices of the customer.
+          $ref: "#/components/schemas/CurrencyType"
         billing_details:
           description: The billing details of the customer
           $ref: "#/components/schemas/CustomerBillingDetails"
@@ -8217,7 +6754,7 @@ components:
           type: string
           description: A detailed summary explaining what the plan is about.
         currency:
-          type: string
+          $ref: "#/components/schemas/CurrencyType"
           description: Currency code in ISO 4217 format.
         options:
           type: array
@@ -8235,7 +6772,7 @@ components:
           type: string
           description: A detailed summary detailing what the plan is about.
         currency:
-          type: string
+          $ref: "#/components/schemas/CurrencyType"
           description: Currency code in ISO 4217 format.
     PostPlanOptionRequest:
       type: object
@@ -8285,8 +6822,8 @@ components:
           type: string
           description: Detailed description about the invoice.
         currency:
-          type: string
-          description: Currency code in ISO 4217 format. Defaults to customer currency is none is provided.
+          $ref: "#/components/schemas/CurrencyType"
+          description: Currency to be used. Defaults to customer currency is none is provided.
         due:
           type: string
           description: Due date in relative time. (e.g. 'In 3 days')
@@ -8303,8 +6840,7 @@ components:
           type: string
           description: Detailed description about the invoice.
         currency:
-          type: string
-          description: Currency code in ISO 4217 format.
+          $ref: "#/components/schemas/CurrencyType"
         due:
           type: string
           description: Due date in relative time. (e.g. 'In 3 days')
@@ -8386,8 +6922,7 @@ components:
           description: The ID of the invoice being paid.
           pattern: "^inv_.*$"
         provider:
-          type: string
-          description: The slug of the provider.
+          $ref: "#/components/schemas/PaymentProviderType"
         billing_details:
           $ref: "#/components/schemas/PaymentBillingDetails"
     PostInitiateCardPaymentRequest:
@@ -8445,8 +6980,7 @@ components:
           description: The ID of the invoice being paid.
           pattern: "^inv_.*$"
         swift_code:
-          type: string
-          description: Swift Code / BIC of the bank.
+          $ref: "#/components/schemas/BankSwiftType"
         redirect_url:
           type: string
           format: url
@@ -8478,8 +7012,7 @@ components:
         - slug
       properties:
         slug:
-          type: string
-          description: The slug of the provider.
+          $ref: "#/components/schemas/PaymentProviderType"
         merchant_id:
           type: string
           description: Provider specific Merchant ID.
