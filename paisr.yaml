@@ -3801,15 +3801,6 @@ components:
         - SURCSRPA
       example: SOUOSRPP
       description: Swift Code of the bank.
-    PaymentProviderType:
-      type: string
-      enum:
-        - pcb
-        - pbb
-        - card
-        - uni5pay
-      example: card
-      description: Unique slug for the provider.
     InvoiceStatus:
       type: string
       description: Status of the invoice.
@@ -3845,7 +3836,7 @@ components:
       default: pending
     PaymentSourceType:
       type: string
-      description: Type of the payment source.
+      description: Type of payment method.
       enum:
         - wallet
         - qr
@@ -3853,6 +3844,32 @@ components:
         - bank
         - other
       example: wallet
+    PaymentProviderType:
+      type: string
+      enum:
+        - pcb
+        - pbb
+        - card
+        - uni5pay
+        - mope
+        - lightning
+      example: card
+      description: Unique slug for the provider.
+
+    QrCodeProvider:
+      type: string
+      description: The slug of the QR code provider.
+      enum:
+        - uni5pay
+        - mope
+        - lightning
+      example: uni5pay
+    WalletProvider:
+      type: string
+      description: The slug of the wallet provider.
+      enum:
+        - pcb
+      example: pcb
 
     # Data Schemas
     SessionData:
@@ -3873,8 +3890,7 @@ components:
         - provider
       properties:
         provider:
-          type: string
-          description: The slug of the QR code provider
+          $ref: "#/components/schemas/QrCodeProvider"
     BankPaymentData:
       type: object
       title: Bank
@@ -3894,8 +3910,7 @@ components:
         - provider
       properties:
         provider:
-          type: string
-          description: The slug of the wallet provider
+          $ref: "#/components/schemas/WalletProvider"
         redirect_url:
           type: string
           format: uri
@@ -4819,8 +4834,6 @@ components:
         description:
           type: string
           example: End of the month sale
-        type:
-          $ref: "#/components/schemas/RateType"
         code:
           type: string
           example: EOTM10
@@ -6215,7 +6228,13 @@ components:
             - data
           properties:
             type:
-              $ref: "#/components/schemas/PaymentSourceType"
+              type: string
+              description: Type of payment method
+              enum:
+                - wallet
+                - qr
+                - card
+                - bank
             data:
               type: object
               description: Payment method data
