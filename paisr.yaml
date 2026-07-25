@@ -30,6 +30,8 @@ servers:
 security:
   - bearerAuth: []
 tags:
+  - name: Health
+    description: Monitor the health of the API.
   - name: Tokens
     description: >
       Access tokens authenticate your API requests. Each token carries a set of permission scopes that determine which resources it can read or write. Create tokens with limited scope and expiry to follow the principle of least privilege.
@@ -100,6 +102,42 @@ tags:
       The API log records every request made against your account, including the authentication method, route, response status, and body. Use it to debug integrations or audit API activity.
 
 paths:
+  /health:
+    get:
+      tags:
+        - Health
+      operationId: healthCheck
+      summary: Health check
+      description: Retrieves the health check status of the API.
+      responses:
+        "200":
+          description: Successfully retrieved health check status.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of the API.
+                        example: Paisr API
+                      version:
+                        type: string
+                        description: The version of the API.
+                        example: v2
+                      environment:
+                        type: string
+                        description: The environment of the API.
+                        example: production
+        "500":
+          $ref: "#/components/responses/500Response"
+
   /access-tokens:
     get:
       tags:
@@ -125,10 +163,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/AccessToken"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Tokens
@@ -148,10 +188,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TokenResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /access-tokens/{token_id}:
     get:
       tags:
@@ -180,10 +224,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/AccessToken"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Tokens
@@ -212,10 +262,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Tokens
@@ -237,10 +293,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /access-tokens/{token_id}/permissions:
     post:
@@ -271,10 +333,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /access-tokens/{token_id}/permissions/{permission_id}:
     delete:
       tags:
@@ -304,10 +372,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /webhooks:
     get:
@@ -334,10 +408,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Webhook"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Webhooks
@@ -358,10 +434,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}:
     get:
       tags:
@@ -391,10 +471,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/Webhook"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Webhooks
@@ -423,10 +509,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Webhooks
@@ -448,10 +540,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/test:
     post:
       tags:
@@ -474,10 +572,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/pause:
     post:
       tags:
@@ -500,10 +604,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/resume:
     post:
       tags:
@@ -526,10 +636,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/stats:
     get:
       tags:
@@ -558,10 +674,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/WebhookStats"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/secret:
     get:
       tags:
@@ -590,10 +712,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/WebhookSecret"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     patch:
       tags:
         - Webhooks
@@ -615,10 +743,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /webhooks/{webhook_id}/triggers:
     post:
@@ -649,10 +783,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/triggers/{trigger_id}:
     delete:
       tags:
@@ -682,10 +822,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /webhooks/{webhook_id}/events:
     get:
@@ -720,10 +866,16 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/WebhookEvent"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /webhooks/{webhook_id}/events/{event_id}:
     post:
       tags:
@@ -753,10 +905,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /wallets:
     get:
@@ -783,10 +941,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Wallet"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Wallets
@@ -807,10 +967,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}:
     get:
       tags:
@@ -839,10 +1003,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/Wallet"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Wallets
@@ -864,10 +1034,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/pin:
     post:
       tags:
@@ -897,10 +1073,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/profile:
     post:
       tags:
@@ -930,10 +1112,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/preferences:
     post:
       tags:
@@ -963,10 +1151,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/statements:
     get:
       tags:
@@ -1012,10 +1206,16 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/WalletStatement"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /wallets/{wallet_id}/transactions:
     get:
@@ -1112,10 +1312,16 @@ paths:
                             - $ref: "#/components/schemas/WalletOutboundTransaction"
                             - $ref: "#/components/schemas/WalletInboundTransaction"
                             - $ref: "#/components/schemas/WalletPayTransaction"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/transactions/{transaction_id}:
     get:
       tags:
@@ -1154,10 +1360,16 @@ paths:
                       - $ref: "#/components/schemas/WalletOutboundTransaction"
                       - $ref: "#/components/schemas/WalletInboundTransaction"
                       - $ref: "#/components/schemas/WalletPayTransaction"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /wallets/{wallet_id}/balances:
     get:
@@ -1205,10 +1417,16 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/WalletBalance"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Balances
@@ -1237,10 +1455,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/balances/{balance_id}:
     get:
       tags:
@@ -1276,10 +1500,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/WalletBalance"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Balances
@@ -1315,10 +1545,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Balances
@@ -1347,10 +1583,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /wallets/{wallet_id}/accounts:
     get:
@@ -1385,10 +1627,16 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/WalletAccount"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Accounts
@@ -1417,10 +1665,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/accounts/{account_id}:
     get:
       tags:
@@ -1456,10 +1710,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/WalletAccount"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     patch:
       tags:
         - Accounts
@@ -1495,10 +1755,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Accounts
@@ -1527,10 +1793,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /wallets/{wallet_id}/contacts:
     get:
@@ -1565,10 +1837,16 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/WalletContact"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Contacts
@@ -1597,10 +1875,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /wallets/{wallet_id}/contacts/{contact_id}:
     get:
       tags:
@@ -1636,10 +1920,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/WalletContact"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Contacts
@@ -1668,10 +1958,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /transfers:
     post:
@@ -1694,10 +1990,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TransferResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /transfers/{transaction_id}/approve:
     post:
       tags:
@@ -1727,10 +2027,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /transfers/{transaction_id}/cancel:
     post:
       tags:
@@ -1760,10 +2066,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /customers:
     get:
@@ -1790,10 +2102,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Customer"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Customers
@@ -1813,11 +2127,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+                $ref: "#/components/schemas/CustomerSessionResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /customers/{customer_id}:
     get:
       tags:
@@ -1846,10 +2164,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/Customer"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Customers
@@ -1878,10 +2202,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Customers
@@ -1903,10 +2233,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /customers/{customer_id}/archive:
     post:
       tags:
@@ -1929,10 +2265,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /customers/{customer_id}/restore:
     post:
       tags:
@@ -1955,10 +2297,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /vouchers:
     get:
@@ -1985,10 +2333,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Voucher"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Vouchers
@@ -2009,10 +2359,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /vouchers/apply:
     post:
       tags:
@@ -2034,10 +2388,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /vouchers/{voucher_id}:
     get:
       tags:
@@ -2066,10 +2424,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/Voucher"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Vouchers
@@ -2098,10 +2462,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Vouchers
@@ -2123,10 +2493,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /plans:
     get:
@@ -2182,10 +2558,14 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Plan"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Plans
@@ -2206,10 +2586,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /plans/{plan_id}:
     get:
       tags:
@@ -2244,10 +2628,16 @@ paths:
                     default: true
                   data:
                     $ref: "#/components/schemas/Plan"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Plans
@@ -2276,10 +2666,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Plans
@@ -2301,10 +2697,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /plans/{plan_id}/options:
     post:
@@ -2335,10 +2737,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /plans/{plan_id}/options/{option_id}:
     put:
       tags:
@@ -2375,10 +2783,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     patch:
       tags:
         - Plans
@@ -2407,10 +2821,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Plans
@@ -2439,10 +2859,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /invoices:
     get:
@@ -2507,10 +2933,14 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Invoice"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Invoices
@@ -2530,11 +2960,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionDataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+                $ref: "#/components/schemas/InvoiceSessionResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /invoices/{invoice_id}:
     get:
       tags:
@@ -2563,10 +2997,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/InvoiceDetails"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     put:
       tags:
         - Invoices
@@ -2595,10 +3035,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Invoices
@@ -2620,10 +3066,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /invoices/{invoice_id}/send:
     post:
       tags:
@@ -2646,10 +3098,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /invoices/{invoice_id}/items:
     post:
@@ -2680,10 +3138,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /invoices/{invoice_id}/items/{item_id}:
     put:
       tags:
@@ -2721,10 +3185,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Invoices
@@ -2753,10 +3223,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /subscriptions:
     get:
@@ -2821,10 +3297,14 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Subscription"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Subscriptions
@@ -2844,11 +3324,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionDataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+                $ref: "#/components/schemas/SubscriptionSessionResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /subscriptions/{subscription_id}:
     get:
       tags:
@@ -2877,10 +3361,16 @@ paths:
                     default: true
                   data:
                     $ref: "#/components/schemas/SubscriptionDetails"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     patch:
       tags:
         - Subscriptions
@@ -2902,10 +3392,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Subscriptions
@@ -2927,10 +3423,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /subscriptions/{subscription_id}/restore:
     post:
       tags:
@@ -2953,10 +3455,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /subscriptions/{subscription_id}/cancel:
     post:
       tags:
@@ -2979,10 +3487,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /payments:
     get:
@@ -3053,10 +3567,14 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Payment"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Payments
@@ -3081,10 +3599,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "402":
+          $ref: "#/components/responses/402Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "422":
+          $ref: "#/components/responses/422Response"
+        "500":
+          $ref: "#/components/responses/500Response"
+        "501":
+          $ref: "#/components/responses/501Response"
 
   /payments/{payment_id}:
     get:
@@ -3114,10 +3642,16 @@ paths:
                     example: true
                   data:
                     $ref: "#/components/schemas/Payment"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /payments/{payment_id}/refund:
     post:
       tags:
@@ -3147,10 +3681,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /providers:
     get:
@@ -3177,10 +3717,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/PaymentProvider"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Provider Connections
@@ -3201,10 +3743,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /providers/{connection_id}:
     put:
       tags:
@@ -3234,10 +3780,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     patch:
       tags:
         - Provider Connections
@@ -3259,10 +3811,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Provider Connections
@@ -3284,10 +3842,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /pages:
     get:
@@ -3314,10 +3878,12 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/StaticPage"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     post:
       tags:
         - Static Pages
@@ -3337,11 +3903,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionDataPlainResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+                $ref: "#/components/schemas/PageSessionResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
   /pages/{page_id}:
     put:
       tags:
@@ -3371,10 +3941,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
     delete:
       tags:
         - Static Pages
@@ -3396,10 +3972,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "404":
+          $ref: "#/components/responses/404Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /metrics:
     get:
@@ -3452,10 +4034,14 @@ paths:
                       - $ref: "#/components/schemas/InvoiceMetrics"
                       - $ref: "#/components/schemas/SubscriptionMetrics"
                       - $ref: "#/components/schemas/PaymentMetrics"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
   /logs:
     get:
@@ -3528,10 +4114,14 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/AuditLog"
-        "4XX":
-          $ref: "#/components/responses/4XXResponse"
-        "5XX":
-          $ref: "#/components/responses/5XXResponse"
+        "400":
+          $ref: "#/components/responses/400Response"
+        "401":
+          $ref: "#/components/responses/401Response"
+        "403":
+          $ref: "#/components/responses/403Response"
+        "500":
+          $ref: "#/components/responses/500Response"
 
 components:
   securitySchemes:
@@ -3576,48 +4166,6 @@ components:
           type: string
           description: A descriptive message regarding the result.
           example: Request was successful.
-    ClientErrorResponse:
-      type: object
-      description: Client error response schema.
-      properties:
-        success:
-          $ref: "#/components/schemas/FailureState"
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Matching client error code.
-              example: request_error
-            message:
-              type: string
-              description: A detailed error message.
-              example: Invalid request body
-            data:
-              type: object
-              default: null
-              description: Metadata about the error.
-    ServerErrorResponse:
-      type: object
-      description: Server error response schema.
-      properties:
-        success:
-          $ref: "#/components/schemas/FailureState"
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Matching server error code.
-              example: server_error
-            message:
-              type: string
-              description: A detailed error message.
-              example: Something went wrong on our end.
-            data:
-              type: object
-              default: null
-              description: Metadata about the error.
     DataResponse:
       type: object
       description: Data response schema.
@@ -3626,14 +4174,14 @@ components:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
-          example: { "id": "tkn_123" }
+          example: { "id": "<tag>_123456" }
           properties:
             id:
               type: string
               description: The unique identifier of the newly created resource.
-    SessionDataResponse:
+    InvoiceSessionResponse:
       type: object
-      description: Data response schema for session data.
+      description: Invoice session response.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
@@ -3642,17 +4190,17 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created resource.
-              example: inv_123
+              description: The unique identifier of the newly created invoice.
+              example: inv_123456
             status:
               type: string
-              description: The status of the newly created resource.
-              example: draft
+              description: The status of the newly created invoice.
+              example: unpaid
             session:
-              $ref: "#/components/schemas/SessionData"
-    SessionDataPlainResponse:
+              $ref: "#/components/schemas/InvoiceSessionData"
+    SubscriptionSessionResponse:
       type: object
-      description: Data response schema for session data in plain format.
+      description: Subscription session response
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
@@ -3661,10 +4209,44 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created resource.
-              example: inv_123
+              description: The unique identifier of the newly created subscription.
+              example: sub_123456
+            status:
+              type: string
+              description: The status of the newly created subscription.
+              example: pending
             session:
-              $ref: "#/components/schemas/SessionData"
+              $ref: "#/components/schemas/InvoiceSessionData"
+    CustomerSessionResponse:
+      type: object
+      description: Customer session response.
+      properties:
+        success:
+          $ref: "#/components/schemas/SuccessState"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the newly created customer.
+              example: cus_123456
+            session:
+              $ref: "#/components/schemas/CustomerSessionData"
+    PageSessionResponse:
+      type: object
+      description: Page session response.
+      properties:
+        success:
+          $ref: "#/components/schemas/SuccessState"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the newly created page.
+              example: stp_123456
+            session:
+              $ref: "#/components/schemas/PageSessionData"
     TokenResponse:
       type: object
       description: Data response schema for token data.
@@ -3676,12 +4258,12 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the token.
+              description: The unique identifier of the newly created token.
               example: tkn_123456
             secret:
               type: string
               description: The secret key of the token. This is not viewable after so make sure to save it somewhere safe.
-              example: nafukdsk43nz13kb7gx3qk
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     TransferResponse:
       type: object
       description: Data response schema for transfer data.
@@ -3693,11 +4275,11 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the transaction.
+              description: The unique identifier of the newly created transfer.
               example: tra_123456
             status:
               type: string
-              description: The current state of the transaction.
+              description: The status of the newly created transfer.
               example: pending-approval
     PaymentResponse:
       type: object
@@ -3710,12 +4292,12 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the payment.
+              description: The unique identifier of the newly created payment.
               example: pmt_123456
             status:
               type: string
-              description: The current state of the payment.
-              example: pending-approval
+              description: The status of the newly created payment.
+              example: pending
             next_action:
               oneOf:
                 - $ref: "#/components/schemas/NextActionRedirect"
@@ -3872,17 +4454,43 @@ components:
       example: pcb
 
     # Data Schemas
-    SessionData:
+    InvoiceSessionData:
       type: object
       description: The session details for collecting payment
       properties:
         url:
           type: string
           description: The checkout url
+          example: https://checkout.paisr.tech/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
         expires_at:
           type: string
           description: Session expiration time.
           format: date-time
+    CustomerSessionData:
+      type: object
+      description: The session details for the customer
+      properties:
+        url:
+          type: string
+          description: The customer portal url
+          example: https://portal.paisr.tech/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        expires_at:
+          type: string
+          description: Session expiration time.
+          format: date-time
+    PageSessionData:
+      type: object
+      description: The session details for the page
+      properties:
+        url:
+          type: string
+          description: The payment page url
+          example: https://page.paisr.tech/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        expires_at:
+          type: string
+          description: Session expiration time.
+          format: date-time
+
     QrPaymentData:
       type: object
       title: QR
@@ -3948,6 +4556,7 @@ components:
               type: string
               description: Expiration year (YY)
               lenght: 2
+
     NextActionRedirect:
       type: object
       description: The provider specific instructions on how to complete a payment
@@ -4693,7 +5302,7 @@ components:
           type: object
           default: {}
         session:
-          $ref: "#/components/schemas/SessionData"
+          $ref: "#/components/schemas/CustomerSessionData"
         created_at:
           type: string
           format: date-time
@@ -4996,7 +5605,7 @@ components:
           type: string
           example: SRD
         session:
-          $ref: "#/components/schemas/SessionData"
+          $ref: "#/components/schemas/InvoiceSessionData"
         due_at:
           type: string
           format: date-time
@@ -5062,7 +5671,7 @@ components:
           type: string
           example: SRD
         session:
-          $ref: "#/components/schemas/SessionData"
+          $ref: "#/components/schemas/InvoiceSessionData"
         line_items:
           type: array
           items:
@@ -5451,7 +6060,7 @@ components:
         fields:
           type: object
         session:
-          $ref: "#/components/schemas/SessionData"
+          $ref: "#/components/schemas/PageSessionData"
         created_at:
           type: string
           format: date-time
@@ -6321,15 +6930,210 @@ components:
             type: string
 
   responses:
-    4XXResponse:
-      description: Validation failed or the requested resource does not exist.
+    400Response:
+      description: Bad Request.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ClientErrorResponse"
-    5XXResponse:
-      description: An unexpected error occurred. Contact support if the issue persists.
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: request_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: A human-readable error message.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
+    401Response:
+      description: Unauthorized.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ServerErrorResponse"
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: authentication_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: Invalid or expired credentials.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
+    402Response:
+      description: Payment Required.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    enum:
+                      - card_error
+                      - processing_error
+                    example: card_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: Invalid or unsupported card.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
+                    properties:
+                      id:
+                        type: string
+                        description: The unique identifier of the payment.
+                        example: pmt_123456
+                      status:
+                        type: string
+                        description: The status of the payment.
+                        example: failed
+    403Response:
+      description: Forbidden.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: authorization_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: Unauthorized to perform this action.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
+    404Response:
+      description: Not Found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: request_error
+                message:
+                  type: string
+                  description: Human-readable error message.
+                  example: Resource not found.
+                data:
+                  type: object
+                  description: Additional error data.
+                  default: null
+    422Response:
+      description: Unprocessable Entity.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    enum:
+                      - invoice_error
+                      - provider_error
+                    example: invoice_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: Invoice not found, or is not in the correct state to receive payments.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
+    500Response:
+      description: Internal Server Error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: server_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: Something went wrong on our end.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
+    501Response:
+      description: Service Unavailable.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                $ref: "#/components/schemas/FailureState"
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: server_error
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: This operation is still under development.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
