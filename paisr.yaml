@@ -106,6 +106,7 @@ paths:
         - Tokens
       operationId: listAccessTokens
       summary: List access tokens
+      description: Retrieves a list of all access tokens associated with your account.
       responses:
         "200":
           description: Successfully retrieved the list of access tokens.
@@ -133,6 +134,7 @@ paths:
         - Tokens
       operationId: createAccessToken
       summary: Create an access token
+      description: Creates a new access token with the specified scopes.
       requestBody:
         description: Request body for creating an access token.
         content:
@@ -156,7 +158,7 @@ paths:
         - Tokens
       operationId: getAccessToken
       summary: Retrieve an access token
-      description: Returns the details of an existing access token, including its scopes and expiry.
+      description: Returns the details of an existing access token.
       parameters:
         - name: token_id
           in: path
@@ -187,7 +189,7 @@ paths:
         - Tokens
       operationId: updateAccessToken
       summary: Update an access token
-      description: Updates the description of an existing access token.
+      description: Updates the details of an existing access token.
       parameters:
         - name: token_id
           in: path
@@ -279,7 +281,7 @@ paths:
         - Tokens
       operationId: removeTokenPermission
       summary: Remove a permission
-      description: Revokes a specific permission scope from a token. The token remains active with its remaining scopes.
+      description: Removes a specific permission scope from a token. The token remains active with its remaining scopes.
       parameters:
         - name: token_id
           in: path
@@ -313,7 +315,7 @@ paths:
         - Webhooks
       operationId: listWebhooks
       summary: List webhooks
-      description: Returns a list of all webhooks configured on your account, including each webhook's endpoint URL, active triggers, and pause status.
+      description: Returns a list of all webhooks configured on your account.
       responses:
         "200":
           description: Successfully retrieved the list of profile webhooks.
@@ -341,7 +343,7 @@ paths:
         - Webhooks
       operationId: createWebhook
       summary: Create a webhook
-      description: Creates a new webhook endpoint. Paisr will sign all event payloads delivered to your endpoint using HMAC-SHA256. Retrieve the signing secret using the Retrieve webhook secret endpoint after creation — it is not included in this response.
+      description: Creates a new webhook endpoint. Retrieve the signing secret using the Retrieve webhook secret endpoint after creation, it is not included in this response.
       requestBody:
         description: The endpoint URL and event triggers to subscribe to.
         required: true
@@ -366,7 +368,7 @@ paths:
         - Webhooks
       operationId: getWebhook
       summary: Retrieve a webhook
-      description: Returns the details of a specific webhook, including its endpoint, triggers, and pause status.
+      description: Returns the details of a specific webhook.
       parameters:
         - name: webhook_id
           in: path
@@ -398,7 +400,7 @@ paths:
         - Webhooks
       operationId: updateWebhook
       summary: Update a webhook
-      description: Updates the endpoint URL or description of an existing webhook.
+      description: Updates the details of an existing webhook.
       parameters:
         - name: webhook_id
           in: path
@@ -482,7 +484,7 @@ paths:
         - Webhooks
       operationId: pauseWebhook
       summary: Pause a webhook
-      description: Pauses event delivery for the webhook. Events that fire while a webhook is paused are not queued — they are silently dropped.
+      description: Pauses event delivery for the webhook. Events that fire while a webhook is paused are not queued but are silently dropped.
       parameters:
         - name: webhook_id
           in: path
@@ -534,7 +536,7 @@ paths:
         - Webhooks
       operationId: getWebhookStats
       summary: Retrieve webhook stats
-      description: Returns delivery performance metrics for the webhook, including counts of successful, failed, and pending events.
+      description: Returns delivery performance metrics for the webhook.
       parameters:
         - name: webhook_id
           in: path
@@ -642,7 +644,7 @@ paths:
               $ref: "#/components/schemas/PostWebhookTriggerRequest"
       responses:
         "200":
-          description: Successfully added permissions.
+          description: Successfully added triggers.
           content:
             application/json:
               schema:
@@ -691,7 +693,7 @@ paths:
         - Webhooks
       operationId: listWebhookEvents
       summary: List webhook events
-      description: Returns a list of event delivery attempts for the webhook, including status, retry count, and timestamps.
+      description: Returns a list of event delivery attempts for the webhook.
       parameters:
         - name: webhook_id
           in: path
@@ -728,7 +730,7 @@ paths:
         - Webhooks
       operationId: retryWebhookEvent
       summary: Retry a webhook event
-      description: Triggers an immediate redelivery attempt for a failed webhook event. Only events where `can_retry` is `true` can be retried.
+      description: Triggers an immediate redelivery attempt for a failed webhook event. Only events where can_retry=true can be retried.
       parameters:
         - name: webhook_id
           in: path
@@ -762,7 +764,7 @@ paths:
         - Wallets
       operationId: listWallets
       summary: List wallets
-      description: Returns a list of all wallets on your account, including their balances, profile, and usage limits.
+      description: Returns a list of all wallets on your account.
       responses:
         "200":
           description: Successfully retrieved the list of wallets.
@@ -872,7 +874,7 @@ paths:
         - Wallets
       operationId: setWalletPin
       summary: Set or update the wallet PIN
-      description: Sets or updates the 4-digit PIN for a wallet. Provide only `new_pin` when setting a PIN for the first time. Include `old_pin` when changing an existing PIN.
+      description: Sets or updates the 4-digit PIN for a wallet. Provide only the new PIN when setting a PIN for the first time. Include the old PIN when changing an existing PIN.
       parameters:
         - name: wallet_id
           in: path
@@ -982,13 +984,13 @@ paths:
             pattern: "^(buw_|inw_).*"
         - name: start_date
           in: query
-          description: The start date for the statement range (inclusive).
+          description: The start date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
         - name: end_date
           in: query
-          description: The end date for the statement range (inclusive).
+          description: The end date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
@@ -1021,7 +1023,7 @@ paths:
         - Transactions
       operationId: listWalletTransactions
       summary: List transactions
-      description: Returns a paginated list of transactions for the wallet. Use the `balance_id`, `status`, `type`, and `method` filters to narrow results. Each transaction type (inbound, outbound, e-commerce) returns a different shape — see the response schema for details.
+      description: Returns a list of transactions for the wallet. Use the filters to narrow results. Each transaction type returns a different shape, see the response schema for details.
       parameters:
         - name: wallet_id
           in: path
@@ -1079,13 +1081,13 @@ paths:
             $ref: "#/components/schemas/LimitFilter"
         - name: start_date
           in: query
-          description: The start date for the transaction range (inclusive).
+          description: The start date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
         - name: end_date
           in: query
-          description: The end date for the transaction range (inclusive).
+          description: The end date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
@@ -1120,7 +1122,7 @@ paths:
         - Transactions
       operationId: getWalletTransaction
       summary: Retrieve a transaction
-      description: Returns the full details of a single transaction, including the quote breakdown of fees, taxes, and any conversion applied.
+      description: Returns the full details of a single transaction.
       parameters:
         - name: wallet_id
           in: path
@@ -1677,7 +1679,7 @@ paths:
         - Transfers
       operationId: initiateTransfer
       summary: Initiate a transfer
-      description: Initiates a transfer using the specified method. All transfers start in a `pending-approval` state and require a cryptographic signature from the source wallet before funds are released. Use the Approve transfer endpoint to complete the flow, or Cancel transfer to abort it.
+      description: Initiates a transfer using the specified method. P2P and ACH transfers require a cryptographic signature from the source wallet before funds are released. Use the Approve transfer endpoint to complete the flow, or Cancel transfer to abort it.
       requestBody:
         description: The source, destination, amount, and optional reference for the transfer.
         required: true
@@ -2935,7 +2937,7 @@ paths:
         - Subscriptions
       operationId: restoreSubscription
       summary: Restore a subscription
-      description: Restores a subscription that entered a `suspended` state due to a failed payment. This triggers a new payment attempt using the subscription's current payment method.
+      description: Restores a subscription that entered a suspended. This triggers a new payment attempt using the customer's saved payment method.
       parameters:
         - name: subscription_id
           in: path
@@ -3122,7 +3124,7 @@ paths:
         - Payments
       operationId: refundPayment
       summary: Refund a payment
-      description: Issues a full or partial refund against a settled payment. Partial refunds require the `amount` field. The invoice status is updated automatically upon successful refund.
+      description: Issues a full refund against a settled or approved payment. If attached to an invoice, the invoice status will return to an unpaid state.
       parameters:
         - name: payment_id
           in: path
@@ -3286,6 +3288,7 @@ paths:
           $ref: "#/components/responses/4XXResponse"
         "5XX":
           $ref: "#/components/responses/5XXResponse"
+
   /pages:
     get:
       tags:
@@ -3397,6 +3400,7 @@ paths:
           $ref: "#/components/responses/4XXResponse"
         "5XX":
           $ref: "#/components/responses/5XXResponse"
+
   /metrics:
     get:
       tags:
@@ -3420,13 +3424,13 @@ paths:
             example: volume
         - name: start_date
           in: query
-          description: The start date for the filter range.
+          description: The start date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
         - name: end_date
           in: query
-          description: The end date for the filter range.
+          description: The end date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
@@ -3496,13 +3500,13 @@ paths:
             $ref: "#/components/schemas/LimitFilter"
         - name: start_date
           in: query
-          description: The start date for the filter range.
+          description: The start date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
         - name: end_date
           in: query
-          description: The end date for the filter range.
+          description: The end date to filter based on.
           required: false
           schema:
             $ref: "#/components/schemas/DateFilter"
@@ -3864,54 +3868,56 @@ components:
           format: date-time
     QrPaymentData:
       type: object
+      title: QR
       required:
         - provider
-      description: The details required for a QR payment
       properties:
         provider:
           type: string
           description: The slug of the QR code provider
     BankPaymentData:
       type: object
+      title: Bank
       required:
         - swift_code
-      description: The details required for a bank payment
       properties:
         swift_code:
           $ref: "#/components/schemas/BankSwiftType"
         redirect_url:
           type: string
+          format: uri
           description: The url to redirect the customer to after completing their payment
     WalletPaymentData:
       type: object
+      title: Wallet
       required:
         - provider
-      description: The details required for a wallet payment
       properties:
         provider:
           type: string
           description: The slug of the wallet provider
         redirect_url:
           type: string
+          format: uri
           description: The url to redirect the customer to after completing their payment
     CardPaymentData:
       type: object
+      title: Card
       required:
         - holder_name
         - number
         - expiry
         - cvc
-      description: The details required for a card payment
       properties:
         holder_name:
           type: string
           description: The full name of the card holder
         number:
           type: string
-          description: The 16-19 digit card number
+          description: The 16-19 digit card number. Never submit plain card details unless you have a valid reason for doing so and are fully compliant with PCI DSS.
         cvc:
           type: string
-          description: The 3-4 digit CVC or PIN
+          description: The 3-4 digit CVC or PIN. Never submit plain CVC or PIN details unless you have a valid reason for doing so and are fully compliant with PCI DSS.
         expiry:
           type: object
           required:
@@ -3921,11 +3927,11 @@ components:
           properties:
             month:
               type: string
-              description: Expiration month
+              description: Expiration month (MM)
               lenght: 2
             year:
               type: string
-              description: Expiration year
+              description: Expiration year (YY)
               lenght: 2
     NextActionRedirect:
       type: object
@@ -4665,9 +4671,9 @@ components:
         default_currency:
           $ref: "#/components/schemas/CurrencyType"
         billing_details:
-          $ref: "#/components/schemas/CustomerBillingDetails"
+          $ref: "#/components/schemas/CustomerBaseBillingDetails"
         shipping_details:
-          $ref: "#/components/schemas/CustomerShippingDetails"
+          $ref: "#/components/schemas/CustomerFullBillingDetails"
         metadata:
           type: object
           default: {}
@@ -4690,13 +4696,13 @@ components:
           type: string
           example: jane@example.com
         billing_details:
-          $ref: "#/components/schemas/CustomerBillingDetails"
+          $ref: "#/components/schemas/CustomerBaseBillingDetails"
         shipping_details:
-          $ref: "#/components/schemas/CustomerShippingDetails"
-    CustomerBillingDetails:
+          $ref: "#/components/schemas/CustomerFullBillingDetails"
+    CustomerBaseBillingDetails:
       type: object
       default: null
-      description: Customer billing details schema.
+      description: Customer billing details.
       required:
         - line_1
         - city
@@ -4704,22 +4710,29 @@ components:
       properties:
         line_1:
           type: string
+          description: Address line 1.
           example: Example Street 10
         line_2:
           type: string
+          description: Address line 2.
           example: Example Street 11
         city:
           type: string
+          description: City.
           example: Paramaribo
         state:
           type: string
+          description: State.
           example: Kwatta
         zip_code:
           type: string
+          description: Zip code.
+          example: "12345"
         country:
           type: string
+          description: Country code in ISO 3166-1 alpha-2 format.
           example: SR
-    CustomerShippingDetails:
+    CustomerFullBillingDetails:
       type: object
       default: null
       description: Customer shipping details schema.
@@ -4731,26 +4744,35 @@ components:
       properties:
         name:
           type: string
+          description: Full name of the customer.
           example: Jane Smith
         phone:
           type: string
+          description: Phone number of the customer. (e.g. +597-8123456)
           example: "+597-8123456"
         line_1:
           type: string
+          description: Address line 1.
           example: Example Street 10
         line_2:
           type: string
+          description: Address line 2.
           example: Example Street 11
         city:
           type: string
+          description: City.
           example: Paramaribo
         state:
           type: string
+          description: State.
           example: Kwatta
         zip_code:
           type: string
+          description: Zip code.
+          example: "12345"
         country:
           type: string
+          description: Country code in ISO 3166-1 alpha-2 format.
           example: SR
     CustomerProviderPreview:
       title: Provider
@@ -4885,7 +4907,6 @@ components:
           format: date-time
     PlanLineOption:
       type: object
-      description: Plan line option schema.
       required:
         - description
         - unit_price
@@ -5074,7 +5095,6 @@ components:
           format: date-time
     InvoiceLineItem:
       type: object
-      description: Invoice line item schema.
       required:
         - description
         - quantity
@@ -5221,7 +5241,6 @@ components:
           format: date-time
     SubscriptionLineItem:
       type: object
-      description: Subscription line item schema.
       required:
         - option_id
         - quantity
@@ -5299,7 +5318,7 @@ components:
               format: float
               example: 132.44
         billing_details:
-          $ref: "#/components/schemas/PaymentBillingDetails"
+          $ref: "#/components/schemas/CustomerFullBillingDetails"
         notes:
           type: string
           default: null
@@ -5334,39 +5353,6 @@ components:
           type: string
           default: null
           format: date-time
-    PaymentBillingDetails:
-      type: object
-      required:
-        - name
-        - country
-      description: Billing details of the customer.
-      properties:
-        name:
-          type: string
-          description: The name of the customer that will appear on receipts.
-        phone:
-          type: string
-          format: tel
-          description: The phone number of the customer. (eg +5978123456)
-        line_1:
-          type: string
-          description: Billing address of the customer.
-        line_2:
-          type: string
-          description: Billing address of the customer.
-        city:
-          type: string
-          description: City name.
-        state:
-          type: string
-          description: State name.
-        zip_code:
-          type: string
-          description: ZIP Code.
-        country:
-          type: string
-          description: Country code in ISO 3166-1 alpha-2 format.
-
     PaymentProvider:
       type: object
       description: Payment provider schema.
@@ -5438,6 +5424,7 @@ components:
         created_at:
           type: string
           format: date-time
+
     StaticPage:
       type: object
       description: Static page schema.
@@ -5455,6 +5442,7 @@ components:
         created_at:
           type: string
           format: date-time
+
     InvoiceMetrics:
       title: Invoices
       type: object
@@ -5620,6 +5608,7 @@ components:
           pattern: ^[a-zA-Z0-9() ]{4,48}$
         scopes:
           type: array
+          format: string
           description: List scopes to attach to the token.
           example:
             - invoices.read
@@ -5646,6 +5635,7 @@ components:
       properties:
         scopes:
           type: array
+          format: string
           description: List of scopes to attach to the token.
           example:
             - invoices.read
@@ -5675,6 +5665,7 @@ components:
           example: https://my-checkout.com/callback
         events:
           type: array
+          format: string
           description: List of events to attach to the webhook.
           example:
             - invoice.paid
@@ -5704,6 +5695,7 @@ components:
       properties:
         events:
           type: array
+          format: string
           description: List of events to attach to the webhook.
           example:
             - invoice.paid
@@ -5911,17 +5903,17 @@ components:
         phone:
           type: string
           format: tel
-          description: The phone number of the customer. (eg +597-8123456)
+          description: The phone number of the customer. (eg +597-8123456).
           example: +597-8123456
         default_currency:
           $ref: "#/components/schemas/CurrencyType"
         billing_details:
-          $ref: "#/components/schemas/CustomerBillingDetails"
+          $ref: "#/components/schemas/CustomerBaseBillingDetails"
         shipping_details:
-          $ref: "#/components/schemas/CustomerShippingDetails"
+          $ref: "#/components/schemas/CustomerFullBillingDetails"
         metadata:
           type: object
-          description: Up to 5 custom key-value pair
+          description: Custom metadata. Can be up to 5 custom key-value pairs.
     PutCustomerRequest:
       type: object
       description: Request body for updating a customer.
@@ -5938,17 +5930,17 @@ components:
         phone:
           type: string
           format: tel
-          description: The phone number of the customer. (eg +597-8123456)
+          description: The phone number of the customer. (eg +597-8123456).
           example: +597-8123456
         default_currency:
           $ref: "#/components/schemas/CurrencyType"
         billing_details:
-          $ref: "#/components/schemas/CustomerBillingDetails"
+          $ref: "#/components/schemas/CustomerBaseBillingDetails"
         shipping_details:
-          $ref: "#/components/schemas/CustomerShippingDetails"
+          $ref: "#/components/schemas/CustomerFullBillingDetails"
         metadata:
           type: object
-          description: Up to 5 custom key-value pairs
+          description: Custom metadata. Can be up to 5 custom key-value pairs.
 
     # Vouchers
     PostVoucherRequest:
@@ -5967,7 +5959,7 @@ components:
           example: Discount voucher for loyal customers.
         code:
           type: string
-          description: Unique code that will be shared with customers.
+          description: Unique code that will be used to redeem the voucher.
           example: DISCOUNT123
         amount:
           type: number
@@ -6071,6 +6063,9 @@ components:
       properties:
         options:
           type: array
+          minItems: 1
+          maxItems: 10
+          description: List of plan line options.
           items:
             $ref: "#/components/schemas/PlanLineOption"
     PutPlanOptionRequest:
@@ -6153,6 +6148,7 @@ components:
           type: array
           minItems: 1
           maxItems: 500
+          description: List of line items for the invoice.
           items:
             $ref: "#/components/schemas/InvoiceLineItem"
     PutInvoiceItemRequest:
@@ -6188,12 +6184,13 @@ components:
           example: customer@example.com
         auto_renew:
           type: boolean
-          description: Flag indicating if the subscription should auto renew the subscription at each billing cycle.
+          description: Flag indicating if the subscription should auto renew at each billing cycle.
           example: true
         line_items:
           type: array
           minItems: 1
           maxItems: 10
+          description: List of line items for the subscription.
           items:
             $ref: "#/components/schemas/SubscriptionLineItem"
 
@@ -6220,35 +6217,24 @@ components:
             type:
               $ref: "#/components/schemas/PaymentSourceType"
             data:
+              type: object
+              description: Payment method data
               oneOf:
                 - $ref: "#/components/schemas/QrPaymentData"
                 - $ref: "#/components/schemas/WalletPaymentData"
                 - $ref: "#/components/schemas/CardPaymentData"
                 - $ref: "#/components/schemas/BankPaymentData"
         billing_details:
-          $ref: "#/components/schemas/PaymentBillingDetails"
+          $ref: "#/components/schemas/CustomerFullBillingDetails"
     PostRefundPaymentRequest:
       type: object
       description: Request body for refunding a payment.
       required:
-        - type
         - note
       properties:
-        type:
-          type: string
-          enum:
-            - full
-            - partial
-          description: Type of refund to perform
-          example: full
-        amount:
-          type: number
-          format: float
-          description: Amount to refund. Required when type is set to partial.
-          example: 100.00
         note:
           type: string
-          description: Reason for refund.
+          description: Reason for the refund.
           example: Refund for late payment
 
     # Payment Providers
@@ -6270,6 +6256,7 @@ components:
           example: managed
         attributes:
           type: object
+          description: Provider specific attributes.
           properties:
             merchant_id:
               type: string
@@ -6309,7 +6296,7 @@ components:
           example: Page Description
         fields:
           type: array
-          description: Formfields to be visible on the page
+          description: Form fields to be visible on the page
           example: []
           items:
             type: string
