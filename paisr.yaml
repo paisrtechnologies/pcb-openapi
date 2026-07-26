@@ -118,10 +118,10 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The health check data.
                     properties:
                       name:
                         type: string
@@ -154,13 +154,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The access tokens data.
                     properties:
                       tokens:
                         type: array
+                        description: The list of access tokens.
                         items:
                           $ref: "#/components/schemas/AccessToken"
         "401":
@@ -220,8 +221,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/AccessToken"
         "400":
@@ -399,13 +399,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The webhooks data.
                     properties:
                       webhooks:
                         type: array
+                        description: The list of webhooks.
                         items:
                           $ref: "#/components/schemas/Webhook"
         "401":
@@ -467,8 +468,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/Webhook"
         "400":
@@ -670,8 +670,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/WebhookStats"
         "400":
@@ -708,8 +707,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/WebhookSecret"
         "400":
@@ -857,13 +855,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The webhook events data.
                     properties:
                       events:
                         type: array
+                        description: The list of webhook events.
                         items:
                           $ref: "#/components/schemas/WebhookEvent"
         "400":
@@ -932,13 +931,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The wallet data.
                     properties:
                       wallets:
                         type: array
+                        description: The list of wallets.
                         items:
                           $ref: "#/components/schemas/Wallet"
         "401":
@@ -999,8 +999,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/Wallet"
         "400":
@@ -1197,13 +1196,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The wallet statement data.
                     properties:
                       statements:
                         type: array
+                        description: The list of wallet statements.
                         items:
                           $ref: "#/components/schemas/WalletStatement"
         "400":
@@ -1300,13 +1300,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The wallet transaction data.
                     properties:
                       transactions:
                         type: array
+                        description: The list of wallet transactions.
                         items:
                           oneOf:
                             - $ref: "#/components/schemas/WalletOutboundTransaction"
@@ -1353,9 +1354,9 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
+                    description: The transaction data.
                     oneOf:
                       - $ref: "#/components/schemas/WalletOutboundTransaction"
                       - $ref: "#/components/schemas/WalletInboundTransaction"
@@ -1408,13 +1409,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The balance data.
                     properties:
                       balances:
                         type: array
+                        description: The list of wallet balances.
                         items:
                           $ref: "#/components/schemas/WalletBalance"
         "400":
@@ -1496,8 +1498,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/WalletBalance"
         "400":
@@ -1618,13 +1619,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The account data.
                     properties:
                       accounts:
                         type: array
+                        description: The list of wallet accounts.
                         items:
                           $ref: "#/components/schemas/WalletAccount"
         "400":
@@ -1706,8 +1708,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/WalletAccount"
         "400":
@@ -1828,13 +1829,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The contact data.
                     properties:
                       contacts:
                         type: array
+                        description: The list of wallet contacts.
                         items:
                           $ref: "#/components/schemas/WalletContact"
         "400":
@@ -1916,8 +1918,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/WalletContact"
         "400":
@@ -2093,13 +2094,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The customer data.
                     properties:
                       customers:
                         type: array
+                        description: The list of customers.
                         items:
                           $ref: "#/components/schemas/Customer"
         "401":
@@ -2160,8 +2162,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/Customer"
         "400":
@@ -2324,13 +2325,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The voucher data.
                     properties:
                       vouchers:
                         type: array
+                        description: The list of vouchers.
                         items:
                           $ref: "#/components/schemas/Voucher"
         "401":
@@ -2549,13 +2551,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    default: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The plans data.
                     properties:
                       plans:
                         type: array
+                        description: The list of plans.
                         items:
                           $ref: "#/components/schemas/Plan"
         "400":
@@ -2624,8 +2627,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    default: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/Plan"
         "400":
@@ -2924,13 +2926,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The invoices data.
                     properties:
                       invoices:
                         type: array
+                        description: The list of invoices.
                         items:
                           $ref: "#/components/schemas/Invoice"
         "400":
@@ -3288,13 +3291,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The subscriptions data.
                     properties:
                       subscriptions:
                         type: array
+                        description: The list of subscriptions.
                         items:
                           $ref: "#/components/schemas/Subscription"
         "400":
@@ -3357,8 +3361,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    default: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/SubscriptionDetails"
         "400":
@@ -3558,13 +3561,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The payments data.
                     properties:
                       payments:
                         type: array
+                        description: The list of payments.
                         items:
                           $ref: "#/components/schemas/Payment"
         "400":
@@ -3613,7 +3617,6 @@ paths:
           $ref: "#/components/responses/500Response"
         "501":
           $ref: "#/components/responses/501Response"
-
   /payments/{payment_id}:
     get:
       tags:
@@ -3638,8 +3641,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/Payment"
         "400":
@@ -3708,13 +3710,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The providers data.
                     properties:
                       providers:
                         type: array
+                        description: The list of payment providers.
                         items:
                           $ref: "#/components/schemas/PaymentProvider"
         "401":
@@ -3869,13 +3872,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The pages data.
                     properties:
                       pages:
                         type: array
+                        description: The list of static pages.
                         items:
                           $ref: "#/components/schemas/StaticPage"
         "401":
@@ -4025,9 +4029,9 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
+                    description: The metrics data.
                     oneOf:
                       - $ref: "#/components/schemas/VolumeMetrics"
                       - $ref: "#/components/schemas/CustomerMetrics"
@@ -4105,13 +4109,14 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
+                    description: The logs data.
                     properties:
                       logs:
                         type: array
+                        description: The list of audit logs.
                         items:
                           $ref: "#/components/schemas/AuditLog"
         "400":
@@ -4158,7 +4163,6 @@ components:
     # Responses
     BaseResponse:
       type: object
-      description: Base response schema.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
@@ -4168,17 +4172,16 @@ components:
           example: Request was successful.
     DataResponse:
       type: object
-      description: Data response schema.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
-          example: { "id": "<tag>_123456" }
+          description: The data of the newly created resource.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created resource.
+              description: The ID of the newly created resource.
     InvoiceSessionResponse:
       type: object
       description: Invoice session response.
@@ -4249,16 +4252,16 @@ components:
               $ref: "#/components/schemas/PageSessionData"
     TokenResponse:
       type: object
-      description: Data response schema for token data.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: The data of the newly created token.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created token.
+              description: The ID of the access token.
               example: tkn_123456
             secret:
               type: string
@@ -4300,8 +4303,8 @@ components:
               example: pending
             next_action:
               oneOf:
-                - $ref: "#/components/schemas/NextActionRedirect"
                 - $ref: "#/components/schemas/NextActionPresentOrTrigger"
+                - $ref: "#/components/schemas/NextActionRedirect"
 
     # Enums
     WalletType:
@@ -4511,6 +4514,7 @@ components:
           type: string
           format: uri
           description: The url to redirect the customer to after completing their payment
+          example: https://your-company.com/callback
     WalletPaymentData:
       type: object
       title: Wallet
@@ -4523,6 +4527,7 @@ components:
           type: string
           format: uri
           description: The url to redirect the customer to after completing their payment
+          example: https://your-company.com/callback
     CardPaymentData:
       type: object
       title: Card
@@ -4535,12 +4540,15 @@ components:
         holder_name:
           type: string
           description: The full name of the card holder
+          example: John Doe
         number:
           type: string
           description: The 16-19 digit card number. Never submit plain card details unless you have a valid reason for doing so and are fully compliant with PCI DSS.
+          example: "4111111111111111"
         cvc:
           type: string
           description: The 3-4 digit CVC or PIN. Never submit plain CVC or PIN details unless you have a valid reason for doing so and are fully compliant with PCI DSS.
+          example: "123"
         expiry:
           type: object
           required:
@@ -4551,10 +4559,12 @@ components:
             month:
               type: string
               description: Expiration month (MM)
+              example: "12"
               lenght: 2
             year:
               type: string
               description: Expiration year (YY)
+              example: "28"
               lenght: 2
 
     NextActionRedirect:
@@ -4591,10 +4601,10 @@ components:
 
     AuditLog:
       type: object
-      description: Audit log schema.
       properties:
         timestamp:
           type: string
+          description: The date and time the audit log entry was created.
           format: date-time
         method:
           type: string
@@ -4605,27 +4615,38 @@ components:
             - PATCH
             - DELETE
           example: POST
+          description: The HTTP method used for the request.
         route:
           type: string
           example: /v2/wallets
+          description: The route of the request.
         user_agent:
           type: string
           example: PostmanRuntime
+          description: The user agent of the request.
         request:
           type: object
+          description: The request details.
           properties:
             body:
               type: object
+              description: The request body.
+              example: {}
         response:
           type: object
+          description: The response details.
           properties:
             status:
               type: number
+              description: The HTTP status code of the response.
               example: 200
             body:
               type: object
+              description: The response body.
+              example: {}
         auth:
           type: object
+          description: The authentication details.
           properties:
             flow:
               type: string
@@ -4633,115 +4654,141 @@ components:
                 - token
                 - user
               example: token
+              description: The authentication flow type.
             uuid:
               type: string
               example: tkn_123456
+              description: The authentication UUID.
 
     AccessToken:
       type: object
-      description: Access token schema.
+      description: The access token data.
       properties:
         id:
           type: string
+          description: The access token ID.
           example: tkn_123456
         description:
           type: string
+          description: The access token description.
           example: Postman
         permissions:
           type: array
+          description: The list of permissions granted by the access token.
           items:
             type: object
             properties:
               id:
                 type: string
+                description: The permission ID.
                 example: tpm_12345
               type:
                 type: string
+                description: The permission type.
                 example: invoices.read
         created_at:
           type: string
           format: date-time
-          example: 2023-01-01T00:00:00Z
+          description: The date and time the access token was created.
         created_by:
           type: string
+          description: The ID of the member or token that created the access token.
           example: tem_123456
         expires_at:
           type: string
           format: date-time
-          example: 2023-01-01T00:00:00Z
+          description: The date and time the access token expires.
 
     Webhook:
       type: object
-      description: Webhook schema.
+      description: The webhook data.
       properties:
         id:
           type: string
+          description: The ID of the webhook.
           example: whk_123456
         description:
           type: string
+          description: The description of the webhook.
           example: Checkout Callback
         endpoint:
           type: string
           format: uri
+          description: The endpoint URL of the webhook.
           example: https://api.example.com/callback
         paused:
           type: boolean
+          description: Whether the webhook is paused.
           example: false
         triggers:
           type: array
+          description: The list of triggers for the webhook.
           items:
             type: object
             properties:
               id:
                 type: string
+                description: The ID of the trigger.
                 example: wtr_12345
               type:
                 type: string
+                description: The type of the trigger.
                 example: invoice.paid
         created_at:
           type: string
           format: date-time
+          description: The date and time the webhook was created.
         created_by:
           type: string
+          description: The ID of the member who created the webhook.
           example: tem_123456
     WebhookStats:
       type: object
-      description: Webhook stats schema.
+      description: The webhook stats.
       properties:
         success:
           type: number
+          description: The number of successful webhook events.
           example: 10
         failed:
           type: number
+          description: The number of failed webhook events.
           example: 2
         pending:
           type: number
+          description: The number of pending webhook events.
           example: 0
     WebhookSecret:
       type: object
-      description: Webhook secret schema.
+      description: The webhook secret.
       properties:
         secret:
           type: string
+          description: The webhook signing secret.
           example: ey7bTCm6tur63CR6mzbuq23r
     WebhookEvent:
       type: object
-      description: Webhook event schema.
+      description: The webhook event data.
       properties:
         id:
           type: string
+          description: The webhook event ID.
           example: wev_123456
         body:
           type: object
+          description: The webhook event body.
           properties:
             id:
               type: string
+              description: The webhook event body ID.
               example: inv_123456
             event:
               type: string
+              description: The webhook event type.
               example: invoice.paid
         status:
           type: string
+          description: The webhook event status.
           enum:
             - pending
             - success
@@ -4749,69 +4796,95 @@ components:
           example: success
         type:
           type: string
+          description: The webhook event type.
           example: invoice.paid
         can_retry:
           type: boolean
+          description: Whether the webhook event can be retried.
+          default: false
         retry_count:
           type: number
-          example: 0
+          description: The number of times the webhook event has been retried.
+          default: 0
         last_retry_at:
           type: string
+          description: The date and time the webhook event was last retried.
           format: date-time
         next_retry_at:
           type: string
+          description: The date and time the webhook event will be retried next.
           format: date-time
         created_at:
           type: string
+          description: The date and time the webhook event was created.
           format: date-time
 
     Wallet:
       type: object
-      description: Wallet schema.
       properties:
         id:
           type: string
+          description: The ID of the wallet.
           example: buw_123456
         beneficiary:
+          type: object
+          description: The beneficiary details.
           properties:
             name:
               type: string
+              description: The name of the beneficiary.
               example: Acme Inc
             email:
               type: string
+              description: The email of the beneficiary.
               example: finance@acme.com
         profile:
+          type: object
+          description: The profile details.
           properties:
             nickname:
               type: string
+              description: The nickname of the profile.
               example: Acme
             cashtag:
               type: string
+              description: The cashtag of the profile.
               example: acmeinc
             preview_url:
               type: string
+              description: The payment URL of the profile.
               example: https://wallet.paisr.tech/pay/me/acmeinc
             public:
               type: boolean
+              description: Whether the profile is public.
+              example: false
         pin:
+          type: object
+          description: The PIN details.
           properties:
             is_set:
               type: boolean
+              description: Whether the PIN is set.
               example: false
             updated_at:
               type: string
+              description: The date and time the PIN was last updated.
               format: date-time
         icon:
           type: string
+          description: The icon of the wallet.
           example: vault
         title:
           type: string
+          description: The title of the wallet.
           example: Cash Wallet
         locked:
           type: boolean
+          description: Whether the wallet is locked.
           example: false
         default:
           type: boolean
+          description: Whether the wallet is the default wallet.
           example: true
         type:
           $ref: "#/components/schemas/WalletType"
@@ -4821,110 +4894,138 @@ components:
             - personal
             - business
           example: business
+          description: The sub-type of the wallet.
         usage:
+          type: object
+          description: The usage and limits of the wallet.
           properties:
             transfers:
               type: object
+              description: The transfers usage and limits of the wallet.
               properties:
                 current:
                   type: number
                   format: float
+                  description: The current balance of transfers.
                   example: 3598.75
                 max:
                   type: number
                   format: float
+                  description: The maximum balance of transfers.
                   example: 25000
             deposits:
               type: object
+              description: The deposits usage and limits of the wallet.
               properties:
                 current:
                   type: number
                   format: float
+                  description: The current balance of deposits.
                   example: 550
                 max:
                   type: number
                   format: float
+                  description: The maximum balance of deposits.
                   example: 5000
             withdrawals:
               type: object
+              description: The withdrawals usage and limits of the wallet.
               properties:
                 current:
                   type: number
                   format: float
+                  description: The current balance of withdrawals.
                   example: 4075
                 max:
                   type: number
                   format: float
+                  description: The maximum balance of withdrawals.
                   example: 25000
             resets_at:
               type: string
+              description: The date and time when the limits reset.
               format: date-time
         created_at:
           type: string
+          description: The date and time when the wallet was created.
           format: date-time
     WalletBalance:
       type: object
-      description: Wallet balance schema.
       properties:
         id:
           type: string
+          description: The balance ID.
           example: bca_123456
         title:
           type: string
+          description: The balance title.
           example: SRD Balance
         currency:
           $ref: "#/components/schemas/CurrencyType"
         balance:
           type: object
+          description: The balance details.
           properties:
             running:
               type: number
               format: float
+              description: The running balance.
               example: 2802.75
             holding:
               type: number
               format: float
+              description: The holding balance.
               example: 0
         frozen:
           type: boolean
+          description: Whether the balance is frozen.
           example: false
         type:
           $ref: "#/components/schemas/WalletBalanceType"
         treasurer:
           type: object
+          description: The treasurer details.
           properties:
             name:
               type: string
+              description: The name of the treasurer.
               example: PAISR Treasury
             iban:
               type: string
+              description: The IBAN of the treasurer.
               example: ABC123456789
             type:
               type: string
+              description: The type of the treasurer.
               example: checking
             bank:
               type: object
+              description: The bank details.
               properties:
                 name:
                   type: string
+                  description: The name of the bank.
                   example: Southern Commercial Bank
                 swift:
                   $ref: "#/components/schemas/BankSwiftType"
         created_at:
           type: string
+          description: The date and time the balance was created.
           format: date-time
     WalletAccount:
       type: object
-      description: Wallet account schema.
       properties:
         id:
           type: string
+          description: The account ID.
           example: cwa_123456
         account_holder:
           type: string
+          description: The name of the account holder.
           example: John Doe
         account_number:
           type: string
+          description: The account number.
           example: "123456789"
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
@@ -4932,153 +5033,192 @@ components:
           $ref: "#/components/schemas/CurrencyType"
         verified:
           type: boolean
+          description: Whether the account is verified.
+          example: true
         bank:
           type: object
+          description: The bank details.
           properties:
             name:
               type: string
+              description: The bank name.
               example: Southern Commercial Bank
             swift_code:
               $ref: "#/components/schemas/BankSwiftType"
         created_at:
           type: string
+          description: The date and time the account was created.
           format: date-time
     WalletContact:
       type: object
-      description: Wallet contact schema.
       properties:
         id:
           type: string
+          description: The contact ID.
           example: fav_123456
         full_name:
           type: string
+          description: The full name of the contact.
           example: Jane Smith
         nickname:
           type: string
+          description: The nickname of the contact.
           example: Jane
         cashtag:
           type: string
+          description: The cashtag of the contact.
           example: janesmith
         avatar:
           type: string
+          description: The avatar of the contact.
           example: https://gravatar.com/avatars/uhofasobobao
         created_at:
           type: string
+          description: The date and time the contact was created.
           format: date-time
     WalletStatement:
       type: object
-      description: Wallet statement schema.
       properties:
         id:
           type: string
+          description: The statement ID.
           example: wst_123456
         timeline:
           type: string
+          description: The timeline of the statement.
           example: November 2023
         source:
           type: string
+          description: The source of the statement.
+          example: https://files.paisr.tech/statements/wst_123456
         created_at:
           type: string
+          description: The date and time the statement was created.
           format: date-time
     WalletPayTransaction:
       title: E-Commerce
       type: object
-      description: Wallet pay transaction schema.
       properties:
         id:
           type: string
+          description: The transaction ID.
           example: tra_123456
         type:
           type: string
           enum:
             - debit
           example: debit
+          description: The transaction type.
         method:
           type: string
           enum:
             - EcomPay
+          description: The transaction method.
         status:
           type: string
           enum:
             - processing
             - settled
+          description: The transaction status.
           example: settled
         destination:
           type: object
+          description: The transaction destination.
           properties:
             name:
               type: string
+              description: The destination name.
               example: Acme Inc
         quote:
           type: object
+          description: The transaction quote.
           properties:
             base:
               type: object
+              description: The base quote.
               properties:
                 total:
                   type: number
                   format: float
+                  description: The total amount of the base quote.
                   example: 100.0
                 currency:
                   type: string
+                  description: The currency of the base quote.
                   example: SRD
             tax:
               type: object
+              description: The tax quote.
               properties:
                 collected:
                   type: boolean
+                  description: Whether the tax is collected.
+                  example: true
                 country:
                   type: string
+                  description: The country of the tax.
                   example: SR
                 type:
                   type: string
+                  description: The type of tax.
                   example: VAT
                 rate:
                   type: number
                   format: float
+                  description: The tax rate.
                   example: 0.10
                 total:
                   type: number
                   format: float
+                  description: The total amount of the tax.
                   example: 10.0
             due:
               type: object
+              description: The due quote.
               properties:
                 total:
                   type: number
                   format: float
+                  description: The total amount of the due quote.
                   example: 110.0
                 currency:
                   type: string
+                  description: The currency of the due quote.
                   example: SRD
         reference:
           type: string
+          description: The reference of the transaction.
           example: "Payment for Invoice #199027"
         balance_before:
           type: number
+          description: The balance before the transaction.
           example: 75.00
         balance_after:
           type: number
+          description: The balance after the transaction.
           example: 50.00
         created_at:
           type: string
+          description: The date and time the transaction was created.
           format: date-time
         processed_at:
           type: string
+          description: The date and time the transaction was processed.
           format: date-time
     WalletOutboundTransaction:
       title: Outbound
       type: object
-      description: Wallet outbound transaction schema.
       properties:
         id:
           type: string
+          description: The transaction ID.
           example: tra_123456
         type:
           type: string
           enum:
             - debit
           example: debit
+          description: The transaction type.
         method:
           type: string
           enum:
@@ -5086,6 +5226,7 @@ components:
             - A2A
             - ACH
           example: P2P
+          description: The transaction method.
         status:
           type: string
           enum:
@@ -5095,143 +5236,182 @@ components:
             - requires-approval
             - cancelled
           example: processing
+          description: The transaction status.
         destination:
           type: object
+          description: The destination of the transaction.
           properties:
             name:
               type: string
               example: Jane Smith
+              description: The name of the destination.
         quote:
           type: object
+          description: The quote for the transaction.
           properties:
             base:
               type: object
+              description: The base quote.
               properties:
                 total:
                   type: number
                   format: float
+                  description: The total amount of the base quote.
                   example: 100.0
                 currency:
                   type: string
                   example: SRD
+                  description: The currency of the base quote.
             tax:
               type: object
+              description: The tax quote.
               properties:
                 collected:
                   type: boolean
+                  description: Whether the tax is collected.
                   example: false
                 country:
                   type: string
+                  description: The country of the tax.
                   example: SR
                 type:
                   type: string
+                  description: The type of the tax.
                   example: VAT
                 rate:
                   type: number
                   format: float
+                  description: The rate of the tax.
                   example: 0
                 total:
                   type: number
                   format: float
+                  description: The total amount of the tax.
                   example: 0
             fee:
               type: object
+              description: The fee quote.
               properties:
                 conversion:
                   type: object
+                  description: The conversion fee.
                   properties:
                     rate:
                       type: number
                       format: float
+                      description: The rate of the conversion fee.
                       example: 0
                     total:
                       type: number
                       format: float
+                      description: The total amount of the conversion fee.
                       example: 0
                 interchange:
                   type: object
+                  description: The interchange fee.
                   properties:
                     rate:
                       type: number
                       format: float
+                      description: The rate of the interchange fee.
                       example: 0
                     total:
                       type: number
                       format: float
+                      description: The total amount of the interchange fee.
                       example: 0
                 total:
                   type: number
                   format: float
+                  description: The total amount of the fee.
                   example: 0
             due:
               type: object
+              description: The due quote.
               properties:
                 total:
                   type: number
                   format: float
+                  description: The total amount of the due quote.
                   example: 100
                 currency:
                   type: string
+                  description: The currency of the due quote.
                   example: SRD
             conversion:
               type: object
+              description: The conversion quote.
               properties:
                 input:
                   type: number
                   format: float
+                  description: The input amount.
                   example: 100
                 from:
                   type: string
+                  description: The currency of the input amount.
                   example: SRD
                 to:
                   type: string
+                  description: The currency of the output amount.
                   example: SRD
                 rate:
                   type: number
                   format: float
+                  description: The exchange rate of the conversion.
                   example: 1
                 total:
                   type: number
                   format: float
+                  description: The total amount of the output.
                   example: 100.0
             output:
               type: object
+              description: The output quote.
               properties:
                 total:
                   type: number
                   format: float
+                  description: The total amount of the output.
                   example: 100.0
                 currency:
                   type: string
+                  description: The currency of the output amount.
                   example: SRD
         reference:
           type: string
+          description: The reference of the transaction.
           example: For services rendered
         balance_before:
           type: number
+          description: The balance before the transaction.
           example: 75.00
         balance_after:
           type: number
+          description: The balance after the transaction.
           example: 50.00
         created_at:
           type: string
+          description: The date and time the transaction was created.
           format: date-time
         processed_at:
           type: string
+          description: The date and time the transaction was processed.
           format: date-time
     WalletInboundTransaction:
       title: Inbound
       type: object
-      description: Wallet inbound transaction schema.
       properties:
         id:
           type: string
+          description: The transaction ID.
           example: tra_123456
         type:
           type: string
           enum:
             - credit
           example: credit
+          description: The transaction type.
         method:
           type: string
           enum:
@@ -5239,41 +5419,58 @@ components:
             - A2A
             - TopUp
             - Payout
+          example: P2P
+          description: The transaction method.
         status:
           type: string
           enum:
             - settled
           example: settled
+          description: The transaction status.
         source:
           type: object
+          description: The source of the transaction.
           properties:
             name:
               type: string
+              description: The name of the source.
+              example: John Doe
         quote:
           type: object
+          description: The quote of the transaction.
           properties:
             output:
               type: object
+              description: The output quote.
               properties:
                 total:
                   type: number
+                  description: The total amount of the quote.
                   format: float
+                  example: 75.00
                 currency:
                   type: string
+                  description: The currency of the quote.
                   example: SRD
         reference:
           type: string
+          description: The reference of the quote.
+          example: Order #123
         balance_before:
           type: number
+          description: The balance before the transaction.
           example: 0.00
         balance_after:
           type: number
+          description: The balance after the transaction.
           example: 75.00
         created_at:
           type: string
+          description: The date and time the transaction was created.
           format: date-time
         processed_at:
           type: string
+          description: The date and time the transaction was processed.
           format: date-time
 
     Customer:
@@ -6844,6 +7041,7 @@ components:
                 - qr
                 - card
                 - bank
+              example: qr
             data:
               type: object
               description: Payment method data
