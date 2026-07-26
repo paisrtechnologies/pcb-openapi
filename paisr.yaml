@@ -1356,6 +1356,7 @@ paths:
                   success:
                     $ref: "#/components/schemas/SuccessState"
                   data:
+                    type: object
                     description: The transaction data.
                     oneOf:
                       - $ref: "#/components/schemas/WalletOutboundTransaction"
@@ -1500,6 +1501,8 @@ paths:
                   success:
                     $ref: "#/components/schemas/SuccessState"
                   data:
+                    type: object
+                    description: The balance data.
                     $ref: "#/components/schemas/WalletBalance"
         "400":
           $ref: "#/components/responses/400Response"
@@ -1710,6 +1713,8 @@ paths:
                   success:
                     $ref: "#/components/schemas/SuccessState"
                   data:
+                    type: object
+                    description: The account data.
                     $ref: "#/components/schemas/WalletAccount"
         "400":
           $ref: "#/components/responses/400Response"
@@ -1832,7 +1837,7 @@ paths:
                     $ref: "#/components/schemas/SuccessState"
                   data:
                     type: object
-                    description: The contact data.
+                    description: The contacts data.
                     properties:
                       contacts:
                         type: array
@@ -1920,6 +1925,8 @@ paths:
                   success:
                     $ref: "#/components/schemas/SuccessState"
                   data:
+                    type: object
+                    description: The contact data.
                     $ref: "#/components/schemas/WalletContact"
         "400":
           $ref: "#/components/responses/400Response"
@@ -2422,8 +2429,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/Voucher"
         "400":
@@ -2629,6 +2635,8 @@ paths:
                   success:
                     $ref: "#/components/schemas/SuccessState"
                   data:
+                    type: object
+                    description: The plan data.
                     $ref: "#/components/schemas/Plan"
         "400":
           $ref: "#/components/responses/400Response"
@@ -2996,8 +3004,7 @@ paths:
                 type: object
                 properties:
                   success:
-                    type: boolean
-                    example: true
+                    $ref: "#/components/schemas/SuccessState"
                   data:
                     $ref: "#/components/schemas/InvoiceDetails"
         "400":
@@ -4184,16 +4191,16 @@ components:
               description: The ID of the newly created resource.
     InvoiceSessionResponse:
       type: object
-      description: Invoice session response.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: Invoice session data.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created invoice.
+              description: The ID of the newly created invoice.
               example: inv_123456
             status:
               type: string
@@ -4203,16 +4210,16 @@ components:
               $ref: "#/components/schemas/InvoiceSessionData"
     SubscriptionSessionResponse:
       type: object
-      description: Subscription session response
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: Subscription session data.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created subscription.
+              description: The ID of the newly created subscription.
               example: sub_123456
             status:
               type: string
@@ -4222,31 +4229,31 @@ components:
               $ref: "#/components/schemas/InvoiceSessionData"
     CustomerSessionResponse:
       type: object
-      description: Customer session response.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: Customer session data.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created customer.
+              description: The ID of the newly created customer.
               example: cus_123456
             session:
               $ref: "#/components/schemas/CustomerSessionData"
     PageSessionResponse:
       type: object
-      description: Page session response.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: Page session data.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created page.
+              description: The ID of the newly created page.
               example: stp_123456
             session:
               $ref: "#/components/schemas/PageSessionData"
@@ -4261,7 +4268,7 @@ components:
           properties:
             id:
               type: string
-              description: The ID of the access token.
+              description: The ID of the newly created token.
               example: tkn_123456
             secret:
               type: string
@@ -4269,16 +4276,16 @@ components:
               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     TransferResponse:
       type: object
-      description: Data response schema for transfer data.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: The transfer data.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created transfer.
+              description: The ID of the newly created transfer.
               example: tra_123456
             status:
               type: string
@@ -4286,22 +4293,24 @@ components:
               example: pending-approval
     PaymentResponse:
       type: object
-      description: Data response schema for payment data.
       properties:
         success:
           $ref: "#/components/schemas/SuccessState"
         data:
           type: object
+          description: The payment response data.
           properties:
             id:
               type: string
-              description: The unique identifier of the newly created payment.
+              description: The ID of the newly created payment.
               example: pmt_123456
             status:
               type: string
               description: The status of the newly created payment.
               example: pending
             next_action:
+              type: object
+              description: The next action to take for the payment.
               oneOf:
                 - $ref: "#/components/schemas/NextActionPresentOrTrigger"
                 - $ref: "#/components/schemas/NextActionRedirect"
@@ -4569,7 +4578,7 @@ components:
 
     NextActionRedirect:
       type: object
-      description: The provider specific instructions on how to complete a payment
+      title: Redirect action
       properties:
         type:
           type: string
@@ -4580,10 +4589,11 @@ components:
           description: The provider slug
         redirect_url:
           type: string
-          default: The url to redirect the customer to
+          description: The url to redirect the customer to
+          default: https://wallet.paisr.tech/pay/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     NextActionPresentOrTrigger:
       type: object
-      description: The provider specific instructions on how to complete a payment
+      title: Present or trigger action
       properties:
         type:
           type: string
@@ -4662,7 +4672,6 @@ components:
 
     AccessToken:
       type: object
-      description: The access token data.
       properties:
         id:
           type: string
@@ -4701,7 +4710,6 @@ components:
 
     Webhook:
       type: object
-      description: The webhook data.
       properties:
         id:
           type: string
@@ -4768,7 +4776,6 @@ components:
           example: ey7bTCm6tur63CR6mzbuq23r
     WebhookEvent:
       type: object
-      description: The webhook event data.
       properties:
         id:
           type: string
@@ -5475,19 +5482,22 @@ components:
 
     Customer:
       type: object
-      description: Customer schema.
       properties:
         id:
           type: string
+          description: The ID of the customer.
           example: cus_123456
         name:
           type: string
+          description: The name of the customer.
           example: Jane Smith
         email:
           type: string
+          description: The email of the customer.
           example: jane@example.com
         phone:
           type: string
+          description: The phone number of the customer.
           example: "+597-8123456"
         default_currency:
           $ref: "#/components/schemas/CurrencyType"
@@ -5497,24 +5507,29 @@ components:
           $ref: "#/components/schemas/CustomerFullBillingDetails"
         metadata:
           type: object
+          description: The metadata of the customer.
           default: {}
         session:
           $ref: "#/components/schemas/CustomerSessionData"
         created_at:
           type: string
+          description: The date and time the customer was created.
           format: date-time
     CustomerPreview:
       type: object
-      description: Customer preview schema.
+      description: The customer details.
       properties:
         id:
           type: string
+          description: The ID of the customer.
           example: cus_123456
         name:
           type: string
+          description: The name of the customer.
           example: Jane Smith
         email:
           type: string
+          description: The email of the customer.
           example: jane@example.com
         billing_details:
           $ref: "#/components/schemas/CustomerBaseBillingDetails"
@@ -5598,86 +5613,116 @@ components:
     CustomerProviderPreview:
       title: Provider
       type: object
-      description: Customer provider preview schema.
       properties:
         id:
           type: string
+          description: The ID of the payment method.
           example: cpm_123456
         type:
           type: string
           enum:
             - credits
             - wallet
+          description: The type of the payment method.
           example: wallet
         provider:
           type: string
+          description: The payment method provider name.
           example: Paisr Pay
     CustomerCardPreview:
       title: Card
       type: object
-      description: Customer card preview schema.
       properties:
         id:
           type: string
+          description: The ID of the payment method.
           example: cmp_123456
         type:
           type: string
+          description: The type of the payment method.
           default: card
+          example: card
         last_four:
           type: string
+          description: The last four digits of the card.
           example: "4242"
         brand:
           type: string
+          description: The brand of the card.
           example: visa
 
     Voucher:
       type: object
-      description: Voucher schema.
       properties:
         id:
           type: string
+          description: The ID of the voucher.
           example: vch_123456
         description:
           type: string
+          description: The description of the voucher.
           example: End of the month sale
         code:
           type: string
+          description: The code of the voucher.
           example: EOTM10
         amount:
           type: number
           format: float
+          description: The amount of the voucher.
           example: 10
         redeems:
           type: object
+          description: The redeems of the voucher.
           properties:
             count:
               type: number
+              description: The count of redeems.
               example: 75
             max:
               type: number
+              description: The maximum count of redeems.
               example: 100
         archived:
           type: boolean
+          description: Whether the voucher is archived.
           example: false
         created_at:
           type: string
+          description: The date and time the voucher was created.
           format: date-time
         expires_at:
           type: string
+          description: The date and time the voucher expires.
           format: date-time
-
-    Plan:
+    VoucherPreview:
       type: object
-      description: Plan schema.
+      description: The details of the voucher applied to the invoice.
+      default: null
       properties:
         id:
           type: string
+          description: The ID of the voucher.
+          example: vch_123456
+        rate:
+          type: number
+          description: The rate of the voucher.
+          example: 10
+
+    Plan:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the plan.
           example: pln_123456
         title:
           type: string
+          description: The title of the plan.
           example: Premium Service
         summary:
           type: string
+          description: The summary of the plan.
           example: Get started with using our premium service.
         type:
           type: string
@@ -5685,44 +5730,57 @@ components:
             - standard
             - metered
           default: standard
+          description: The type of the plan.
           example: standard
         currency:
           type: string
+          description: The currency of the plan.
           example: SRD
         created_at:
           type: string
+          description: The date and time the plan was created.
           format: date-time
         options:
           type: array
+          description: The list of options attached to the plan.
           items:
             $ref: "#/components/schemas/PlanOption"
     PlanOption:
       type: object
-      description: Plan option schema.
       properties:
         id:
           type: string
+          description: The ID of the plan option.
           example: plo_123456
         description:
           type: string
+          description: The description of the plan option.
           example: Monthly
         active:
           type: boolean
           default: true
+          description: Whether the plan option is active.
           example: true
         unit_price:
           type: number
+          description: The unit price of the plan option.
           example: 9.99
         billing_interval:
           type: number
+          description: The billing interval of the plan option.
           example: 30
         subscribers:
           type: number
+          description: The number of subscribers to the plan option.
           example: 10
         attributes:
           type: object
+          description: The attributes of the plan option.
+          default: {}
+          example: {}
         created_at:
           type: string
+          description: The date and time the plan option was created.
           format: date-time
     PlanLineOption:
       type: object
@@ -5751,166 +5809,177 @@ components:
 
     Invoice:
       type: object
-      description: Invoice schema.
       properties:
         id:
           type: string
+          description: The ID of the invoice.
           example: inv_123456
         sid:
           type: number
+          description: The Serial ID of the invoice.
           example: 600783
         subscription_id:
           type: string
+          description: The ID of the subscription the invoice is associated with.
           default: null
           example: sub_123456
         customer:
           $ref: "#/components/schemas/CustomerPreview"
         voucher:
-          type: object
-          default: null
-          properties:
-            id:
-              type: string
-              example: vch_123456
-            type:
-              $ref: "#/components/schemas/RateType"
-            rate:
-              type: number
-              format: float
-              example: 10
+          $ref: "#/components/schemas/VoucherPreview"
         summary:
           type: string
+          description: The summary of the invoice.
           example: A simple pizza order
         amount:
           type: object
+          description: The amount details of the invoice.
           properties:
             sub_total:
               type: number
+              description: The sub total of the invoice.
               format: float
               example: 150
             discount_total:
               type: number
+              description: The discount total of the invoice.
               format: float
               example: 15
             net_total:
               type: number
+              description: The net total of the invoice.
               format: float
               example: 135
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
           type: string
+          description: The currency of the invoice.
           example: SRD
         session:
           $ref: "#/components/schemas/InvoiceSessionData"
         due_at:
           type: string
+          description: The due date of the invoice.
           format: date-time
         paid_at:
           type: string
+          description: The date and time the invoice was paid.
           format: date-time
         void_at:
           type: string
+          description: The date and time the invoice was voided.
           format: date-time
         created_at:
           type: string
+          description: The date and time the invoice was created.
           format: date-time
     InvoiceDetails:
       type: object
-      description: Full invoice schema.
+      description: The invoice details.
       properties:
         id:
           type: string
+          description: The ID of the invoice.
           example: inv_123456
         sid:
           type: number
+          description: The Serial ID of the invoice.
           example: 600783
         subscription_id:
           type: string
+          description: The ID of the subscription associated with the invoice.
           default: null
           example: sub_123456
         customer:
           $ref: "#/components/schemas/CustomerPreview"
         voucher:
-          type: object
-          default: null
-          properties:
-            id:
-              type: string
-              example: vch_123456
-            type:
-              $ref: "#/components/schemas/RateType"
-            rate:
-              type: number
-              format: float
-              example: 10
+          $ref: "#/components/schemas/VoucherPreview"
         summary:
           type: string
+          description: The summary of the invoice.
           example: A simple pizza order
         amount:
           type: object
+          description: The amount details of the invoice.
           properties:
             sub_total:
               type: number
+              description: The sub total of the invoice.
               format: float
               example: 150
             discount_total:
               type: number
+              description: The discount total of the invoice.
               format: float
               example: 15
             net_total:
               type: number
+              description: The net total of the invoice.
               format: float
               example: 135
         status:
           $ref: "#/components/schemas/InvoiceStatus"
         currency:
           type: string
+          description: The currency of the invoice.
           example: SRD
         session:
           $ref: "#/components/schemas/InvoiceSessionData"
         line_items:
           type: array
+          description: The line items of the invoice.
           items:
             $ref: "#/components/schemas/InvoiceItem"
         due_at:
           type: string
+          description: The due date and time of the invoice.
           format: date-time
         paid_at:
           type: string
+          description: The date and time the invoice was paid.
           format: date-time
         void_at:
           type: string
+          description: The date and time the invoice was voided.
           format: date-time
         created_at:
           type: string
+          description: The date and time the invoice was created.
           format: date-time
     InvoiceItem:
       type: object
-      description: Invoice item schema.
+      description: The line item details.
       properties:
         id:
           type: string
+          description: The ID of the line item.
           example: itm_123456
         description:
           type: string
+          description: The description of the line item.
           example: Small Pizza
         quantity:
           type: number
+          description: The quantity of the line item.
           example: 2
         total:
           type: object
+          description: The total details of the line item.
           properties:
             unit:
               type: number
+              description: The unit price of the line item.
               format: float
               example: 75
             calculated:
               type: number
+              description: The calculated total of the line item.
               format: float
               example: 150
         created_at:
           type: string
+          description: The date and time the line item was created.
           format: date-time
     InvoiceLineItem:
       type: object
@@ -5934,14 +6003,16 @@ components:
 
     Subscription:
       type: object
-      description: Subscription schema.
       properties:
         id:
           type: string
+          description: The ID of the subscription.
           example: sub_123456
         customer:
           $ref: "#/components/schemas/CustomerPreview"
         payment_method:
+          type: object
+          description: The payment method details.
           oneOf:
             - $ref: "#/components/schemas/CustomerProviderPreview"
             - $ref: "#/components/schemas/CustomerCardPreview"
@@ -5949,38 +6020,49 @@ components:
           $ref: "#/components/schemas/SubscriptionStatus"
         currency:
           type: string
+          description: The currency of the subscription.
           example: SRD
         auto_renew:
           type: boolean
+          description: Whether the subscription should auto-renew.
           example: true
         billing_interval:
           type: number
+          description: The billing interval in days.
           example: 30
         billing_start:
           type: string
+          description: The start date of the billing period.
           format: date-time
         billing_end:
           type: string
+          description: The end date of the billing period.
           format: date-time
         last_renew_at:
           type: string
+          description: The date of the last renewal.
           format: date-time
         next_renew_at:
           type: string
+          description: The date of the next renewal.
           format: date-time
         created_at:
           type: string
+          description: The date and time the subscription was created.
           format: date-time
     SubscriptionDetails:
       type: object
-      description: Subscription details schema.
+      description: The subscription details.
       properties:
         id:
           type: string
+          description: The ID of the subscription.
           example: sub_123456
         customer:
           $ref: "#/components/schemas/CustomerPreview"
         payment_method:
+          type: object
+          description: The payment method details.
           oneOf:
             - $ref: "#/components/schemas/CustomerProviderPreview"
             - $ref: "#/components/schemas/CustomerCardPreview"
@@ -5988,75 +6070,85 @@ components:
           $ref: "#/components/schemas/SubscriptionStatus"
         currency:
           type: string
+          description: The currency of the subscription.
           example: SRD
         auto_renew:
           type: boolean
+          description: Whether the subscription should auto-renew.
           example: true
-        trial_start:
-          type: string
-          format: date-time
-        trial_end:
-          type: string
-          format: date-time
         billing_interval:
           type: number
+          description: The billing interval in days.
           example: 30
         billing_start:
           type: string
+          description: The start date of the billing period.
           format: date-time
         billing_end:
           type: string
+          description: The end date of the billing period.
           format: date-time
         last_renew_at:
           type: string
+          description: The date and time the subscription was last renewed.
           format: date-time
         next_renew_at:
           type: string
+          description: The date and time the subscription will be renewed next.
           format: date-time
-        cancelled:
-          type: boolean
-          example: true
         cancelled_at:
           type: string
+          description: The date and time the subscription was cancelled.
           format: date-time
+          default: null
         created_at:
           type: string
+          description: The date and time the subscription was created.
           format: date-time
         line_items:
           type: array
+          description: The line items of the subscription.
           items:
             $ref: "#/components/schemas/SubscriptionItem"
     SubscriptionItem:
       type: object
-      description: Subscription item schema.
       properties:
         id:
           type: string
+          description: The ID of the subscription item.
           example: stm_123456
         title:
           type: string
+          description: The title of the subscription item.
           example: Premium Service - Monthly
         quantity:
           type: number
+          description: The quantity of the subscription item.
           example: 1
         option:
           type: object
+          description: The option the subscription item is associated with.
           properties:
             id:
               type: string
+              description: The ID of the option.
               example: plo_123456
             plan_id:
               type: string
+              description: The ID of the plan the option belongs to.
               example: pln_123456
             available:
               type: boolean
+              description: Whether the option is available.
               example: true
             unit_price:
               type: number
               format: float
+              description: The unit price of the option.
               example: 9.99
         created_at:
           type: string
+          description: The date and time the subscription item was created.
           format: date-time
     SubscriptionLineItem:
       type: object
@@ -6074,167 +6166,242 @@ components:
 
     Payment:
       type: object
-      description: Payment schema.
       properties:
         id:
           type: string
+          description: The ID of the payment.
           example: pmt_123456
         sid:
           type: number
+          description: The Serial ID of the payment.
           example: 680297
         invoice_id:
           type: string
+          description: The ID of the invoice associated with the payment.
           default: null
           example: inv_123456
         description:
           type: string
+          description: The description or reference of the payment.
           example: "Payment for Invoice #600783"
         currency:
           type: string
+          description: The currency of the payment.
           example: SRD
         status:
           $ref: "#/components/schemas/PaymentStatus"
         payment_method:
           type: object
+          description: The payment method used for the payment.
           properties:
             provider:
               type: string
+              description: The provider of the payment method.
               example: Paisr Pay
             type:
               $ref: "#/components/schemas/PaymentSourceType"
             metadata:
               type: object
+              description: The metadata of the payment method.
+              default: null
+              example: null
         amount:
           type: object
+          description: The amount details of the payment.
           properties:
             sub_total:
               type: number
+              description: The sub total of the payment.
               format: float
               example: 135
             tax:
               type: object
+              description: The tax details of the payment.
               properties:
                 rate:
                   type: number
+                  description: The tax rate of the payment.
                   format: float
                   example: 0
                 type:
                   $ref: "#/components/schemas/RateType"
                 total:
                   type: number
+                  description: The total tax amount of the payment.
                   format: float
                   example: 0
             due_total:
               type: number
+              description: The total due amount of the payment.
               format: float
               example: 135
             fee_total:
               type: number
+              description: The total fee amount of the payment.
               format: float
               example: 2.56
             output_total:
               type: number
+              description: The total output amount of the payment.
               format: float
               example: 132.44
         billing_details:
           $ref: "#/components/schemas/CustomerFullBillingDetails"
         notes:
           type: string
+          description: The notes of the payment.
           default: null
         metadata:
           type: object
+          description: The metadata of the payment.
           default: {}
         initiated_at:
           type: string
+          description: The date and time the payment was initiated.
           format: date-time
         approved_at:
           type: string
+          description: The date and time the payment was approved.
           format: date-time
         settled_at:
           type: string
+          description: The date and time the payment was settled.
           default: null
           format: date-time
         cancelled_at:
           type: string
+          description: The date and time the payment was cancelled.
           default: null
           format: date-time
         cancelled_by:
           type: string
+          description: The ID of the member who cancelled the payment.
           default: null
         reversed_at:
           type: string
+          description: The date and time the payment was reversed.
           default: null
           format: date-time
         reversed_by:
           type: string
+          description: The ID of the member who reversed the payment.
           default: null
         est_settlement_at:
           type: string
+          description: The estimated settlement date and time of the payment.
           default: null
           format: date-time
+
     PaymentProvider:
       type: object
-      description: Payment provider schema.
       properties:
         id:
           type: string
+          description: The ID of the payment provider.
           example: bpc_123456
         name:
           type: string
+          description: The name of the payment provider.
           example: Paisr Pay
         summary:
           type: string
+          description: A brief summary of the payment provider.
+          example: A payment provider that supports multiple payment methods.
         description:
           type: string
+          description: The description of the payment provider.
+          example: A payment provider that supports multiple payment methods.
         logo:
           type: string
+          description: The logo of the payment provider.
+          example: https://wallet.paisr.tech/logo.png
         method:
           type: string
+          description: The payment method supported by the provider.
+          example: card
         slug:
           type: string
+          description: The slug of the payment provider.
+          example: pcb
         available:
           type: boolean
+          description: Whether the payment provider is available.
+          example: true
         external:
           type: boolean
+          description: Whether the payment provider is external.
+          example: false
         config:
           type: object
+          description: The configuration of the payment provider.
           properties:
             type:
               type: string
+              description: The type of configuration.
+              example: managed
             status:
               type: string
+              description: The status of the configuration.
+              example: active
             fee_strategy:
               type: object
+              description: The fee strategy of the configuration.
               properties:
                 type:
                   type: string
+                  description: The type of fee strategy.
+                  example: custom
                 interchange:
                   type: object
+                  description: The interchange fee details.
+                  properties:
+                    fee_type:
+                      type: string
+                      description: The type of interchange fee.
+                      example: percentage
+                    fee_total:
+                      type: number
+                      description: The total interchange fee.
+                      example: 0.05
+                    fee_cap:
+                      type: number
+                      description: The cap on the interchange fee.
+                      example: 1000
             metadata:
               type: object
+              description: The custom metadata used for the connection.
         attributes:
           type: object
+          description: The attributes of the payment method.
           properties:
             min_amount:
               type: number
+              description: The minimum amount for the payment method.
               example: 0.01
             max_amount:
               type: number
+              description: The maximum amount for the payment method.
               example: 100000
             allows_recurring:
               type: boolean
+              description: Whether recurring payments are supported.
               example: true
             allows_refunds:
               type: boolean
+              description: Whether refunds are supported.
               example: true
             allows_disputes:
               type: boolean
+              description: Whether disputes are supported.
               example: true
             confirmation_window:
               type: string
+              description: The confirmation window for the payment method.
               example: immediately
             supported_currencies:
               type: array
+              format: string
+              description: The supported currencies for the payment method.
               items:
                 type: string
                 examples:
@@ -6242,175 +6409,268 @@ components:
                   - USD
         created_at:
           type: string
+          description: The date and time the payment method was created.
           format: date-time
 
     StaticPage:
       type: object
-      description: Static page schema.
       properties:
         id:
           type: string
+          description: The ID of the static page.
           example: stp_123456
         description:
           type: string
+          description: The description of the static page.
           example: Web POS
         fields:
           type: object
+          description: The fields of the static page.
+          example: {}
         session:
           $ref: "#/components/schemas/PageSessionData"
         created_at:
           type: string
+          description: The date and time the static page was created.
           format: date-time
 
     InvoiceMetrics:
       title: Invoices
       type: object
-      description: Invoice metrics schema.
       properties:
         total:
           type: number
+          description: The total number of invoices.
+          default: 0
           example: 49
         unpaid:
           type: number
+          description: The number of unpaid invoices.
+          default: 0
           example: 9
         paid:
           type: number
+          description: The number of paid invoices.
+          default: 0
           example: 40
         voided:
           type: number
+          description: The number of voided invoices.
+          default: 0
           example: 0
         series:
           type: array
+          description: Day by day invoice metrics.
           items:
             type: object
             properties:
               day:
                 type: string
+                description: The date of the day.
+                example: 2026-01-01
               new:
                 type: number
+                description: The number of new invoices on the day.
+                default: 0
+                example: 1
               paid:
                 type: number
+                description: The number of paid invoices on the day.
+                default: 0
+                example: 1
               voided:
                 type: number
+                description: The number of voided invoices on the day.
+                default: 0
+                example: 0
     SubscriptionMetrics:
       title: Subscriptions
       type: object
-      description: Subscription metrics schema.
       properties:
         total:
           type: number
+          description: The total number of subscriptions.
+          default: 0
           example: 67
         pending:
           type: number
+          description: The number of pending subscriptions.
+          default: 0
           example: 9
         active:
           type: number
+          description: The number of active subscriptions.
+          default: 0
           example: 40
         suspended:
           type: number
+          description: The number of suspended subscriptions.
+          default: 0
           example: 3
         cancelled:
           type: number
+          description: The number of cancelled subscriptions.
+          default: 0
           example: 4
         series:
           type: array
+          description: Day by day subscription metrics.
           items:
             type: object
             properties:
               day:
                 type: string
+                description: The date of the day.
+                example: 2026-01-01
               new:
                 type: number
+                description: The number of new subscriptions on the day.
+                example: 5
               started:
                 type: number
+                description: The number of started subscriptions on the day.
+                example: 10
               ended:
                 type: number
+                description: The number of ended subscriptions on the day.
+                example: 2
     PaymentMetrics:
       title: Payments
       type: object
-      description: Payment metrics schema.
       properties:
         total:
           type: number
+          description: The total number of payments.
+          default: 0
           example: 15
         failed:
           type: number
+          description: The number of failed payments.
+          default: 0
           example: 3
         pending:
           type: number
+          description: The number of pending payments.
+          default: 0
           example: 2
         settled:
           type: number
+          description: The number of settled payments.
+          default: 0
           example: 10
         refunded:
           type: number
+          description: The number of refunded payments.
+          default: 0
           example: 0
         cancelled:
           type: number
+          description: The number of cancelled payments.
+          default: 0
           example: 0
         series:
           type: array
+          description: Day by day payment metrics.
           items:
             type: object
             properties:
               day:
                 type: string
+                description: The date of the day.
+                example: 2026-01-01
               initiated:
                 type: number
+                description: The number of payments initiated on the day.
+                default: 0
+                example: 10
               approved:
                 type: number
+                description: The number of payments approved on the day.
+                default: 0
+                example: 8
               cancelled:
                 type: number
+                description: The number of payments cancelled on the day.
+                default: 0
+                example: 2
     CustomerMetrics:
       title: Customers
       type: object
-      description: Customer metrics schema.
       properties:
         total:
           type: number
-          description: The total number of customers
+          description: The total number of customers.
+          default: 0
           example: 24
         new:
           type: number
-          description: The total number of customers created within the timeframe
+          description: The total number of customers created within the timeframe.
+          default: 0
           example: 3
         series:
           type: array
-          description: Day by day metrics on new customers
+          description: Day by day customer metrics.
           items:
             type: object
             properties:
               day:
                 type: string
+                description: The date of the day.
+                example: 2026-01-01
               new:
                 type: number
+                description: The total number of new customers on the day.
+                default: 0
+                example: 3
     VolumeMetrics:
       title: Volume
       type: object
-      description: Volume metrics schema.
       properties:
         results:
           type: array
+          description: The volume metrics results
           items:
             type: object
             properties:
               currency:
                 type: string
+                description: The currency code.
                 example: SRD
               gross_volume:
                 type: number
+                description: The gross volume.
+                default: 0.00
+                example: 1200.00
               incoming_volume:
                 type: number
+                description: The incoming volume.
+                default: 0.00
+                example: 200.00
               settled_volume:
                 type: number
+                description: The settled volume.
+                default: 0.00
+                example: 1000.00
               refunded_volume:
                 type: number
+                description: The refunded volume.
+                default: 0.00
+                example: 0.00
               lost_volume:
                 type: number
+                description: The lost volume.
+                default: 0.00
+                example: 500.00
               fee_volume:
                 type: number
+                description: The fee volume.
+                default: 0.00
+                example: 50.00
               tax_volume:
                 type: number
+                description: The tax volume.
+                default: 0.00
+                example: 0.00
 
     # Request Schemas
     PostAccessTokenRequest:
