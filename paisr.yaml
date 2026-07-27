@@ -5045,6 +5045,10 @@ components:
         account_number:
           type: string
           description: The account number.
+          example: "AC123456789"
+        routing_number:
+          type: string
+          description: The routing number. Available on US accounts.
           example: "123456789"
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
@@ -6883,12 +6887,15 @@ components:
         account_holder:
           type: string
           description: Full account holder name.
+          example: John Doe
         account_number:
           type: string
           description: Full account number / IBAN.
+          example: AC123456789
         routing_number:
           type: string
           description: Routing number. Required for US accounts.
+          example: "123456789"
         account_type:
           $ref: "#/components/schemas/WalletAccountType"
         swift_code:
@@ -6963,7 +6970,7 @@ components:
         signature:
           type: string
           description: Signature of the transfer signed by the source wallet.
-          example:
+          example: hmac-signature
     PostCancelTransferRequest:
       type: object
       description: Request body for cancelling a transfer.
@@ -6973,7 +6980,7 @@ components:
         note:
           type: string
           description: Reason for cancellation.
-          example: Order cancelled by customer
+          example: Last minute mind change
 
     # Customers
     PostCustomerRequest:
@@ -7524,14 +7531,14 @@ components:
                     type: string
                     description: Type of error.
                     example: request_error
-                message:
-                  type: string
-                  description: Human-readable error message.
-                  example: Resource not found.
-                data:
-                  type: object
-                  description: Additional error data.
-                  default: null
+                  message:
+                    type: string
+                    description: Human-readable error message.
+                    example: Resource not found.
+                  data:
+                    type: object
+                    description: Additional error data.
+                    default: null
     422Response:
       description: Unprocessable Entity.
       content:
