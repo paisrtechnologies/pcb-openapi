@@ -32,7 +32,7 @@ security:
 tags:
   - name: Health
     description: Monitor the health of the API.
-  - name: Tokens
+  - name: Access Tokens
     description: >
       Access tokens authenticate your API requests. Each token carries a set of permission scopes that determine which resources it can read or write. Create tokens with limited scope and expiry to follow the principle of least privilege.
   - name: Webhooks
@@ -94,7 +94,7 @@ tags:
   - name: Static Pages
     description: >
       Static pages are payment pages that can be used to accept payments without attaching them to an invoice.
-  - name: Analytics
+  - name: Metrics
     description: >
       Metrics give you a real-time snapshot of invoice, subscription, payment, and customer activity. Use these endpoints to power dashboards or monitor the health of your billing operations.
   - name: Logs
@@ -141,7 +141,7 @@ paths:
   /access-tokens:
     get:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: listAccessTokens
       summary: List access tokens
       description: Retrieves a list of all access tokens associated with your account.
@@ -172,7 +172,7 @@ paths:
           $ref: "#/components/responses/500Response"
     post:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: createAccessToken
       summary: Create an access token
       description: Creates a new access token with the specified scopes.
@@ -200,7 +200,7 @@ paths:
   /access-tokens/{token_id}:
     get:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: getAccessToken
       summary: Retrieve an access token
       description: Returns the details of an existing access token.
@@ -238,7 +238,7 @@ paths:
           $ref: "#/components/responses/500Response"
     put:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: updateAccessToken
       summary: Update an access token
       description: Updates the details of an existing access token.
@@ -276,7 +276,7 @@ paths:
           $ref: "#/components/responses/500Response"
     delete:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: revokeAccessToken
       summary: Revoke an access token
       description: Permanently revokes a token. Revoked tokens are rejected immediately on the next request. This action cannot be undone.
@@ -309,7 +309,7 @@ paths:
   /access-tokens/{token_id}/permissions:
     post:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: addTokenPermission
       summary: Add a permission
       description: Grants one or more additional permission scopes to an existing token.
@@ -348,7 +348,7 @@ paths:
   /access-tokens/{token_id}/permissions/{permission_id}:
     delete:
       tags:
-        - Tokens
+        - Access Tokens
       operationId: removeTokenPermission
       summary: Remove a permission
       description: Removes a specific permission scope from a token. The token remains active with its remaining scopes.
@@ -4009,7 +4009,7 @@ paths:
   /metrics:
     get:
       tags:
-        - Analytics
+        - Metrics
       operationId: getMetrics
       summary: Retrieve metrics for analytical purposes
       description: Returns the corresponding metrics based on the provided filter
