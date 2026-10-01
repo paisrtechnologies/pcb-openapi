@@ -436,7 +436,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataResponse"
+                $ref: "#/components/schemas/WebhookSecretResponse"
         "400":
           $ref: "#/components/responses/400Response"
         "401":
@@ -744,7 +744,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
+                type: object
+                properties:
+                  success:
+                    $ref: "#/components/schemas/SuccessState"
+                  data:
+                    $ref: "#/components/schemas/WebhookSecret"
         "400":
           $ref: "#/components/responses/400Response"
         "401":
@@ -4286,6 +4291,23 @@ components:
               type: string
               description: The secret key of the token. This is not viewable after so make sure to save it somewhere safe.
               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+    WebhookSecretResponse:
+      type: object
+      properties:
+        success:
+          $ref: "#/components/schemas/SuccessState"
+        data:
+          type: object
+          description: The data of the newly created webhook.
+          properties:
+            id:
+              type: string
+              description: The ID of the newly created webhook.
+              example: whk_123456
+            secret:
+              type: string
+              description: The webhook signing secret.
+              example: ey7bTCm6tur63CR6mzbuq23r
     TransferResponse:
       type: object
       properties:
